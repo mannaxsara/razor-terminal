@@ -1,0 +1,51 @@
+name: Verify
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: verify-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  typecheck:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: ./.github/actions/setup-bun
+
+      - name: Typecheck production runtimes
+        run: bun run typecheck
+
+  build-and-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: ./.github/actions/setup-bun
+
+      - name: Test
+        run: bun test
+
+      - name: Benchmark Evaluation Suite
+        run: bun run eval
+
+      - name: Streaming Ingestion Simulator
+        run: bun run simulate
+
+      - name: Build Electrobun view
+        run: bun run desktop:view:build
+
+      - name: Build and audit browser app
+        run: bun run web:audit
+
+      - name: Dry-run Cloudflare Worker
+        run: bun run cloudflare:dry-run
+
+      - name: Build core binary
+        run: bun run build

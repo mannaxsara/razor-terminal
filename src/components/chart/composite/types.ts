@@ -1,0 +1,156 @@
+import type { ReactNode } from "react";
+import type {
+  ChartPanelSpec,
+  PanelScale,
+  ResolvedSeries,
+  TimeSeriesPoint,
+} from "../../../time-series/types";
+
+export type CompositeAxisSide = "left" | "right";
+
+export interface CompositeChartColors {
+  background: string;
+  grid: string;
+  crosshair: string;
+  text: string;
+  textDim: string;
+  negative: string;
+}
+
+export interface CompositeAxisDomain {
+  side: CompositeAxisSide;
+  min: number;
+  max: number;
+  scale: PanelScale;
+  unit: string;
+  unitGroup: string;
+  seriesIds: string[];
+}
+
+export interface CompositeProjectedPoint {
+  point: TimeSeriesPoint;
+  timestamp: number;
+  value: number;
+  xRatio: number;
+  /** Primary-market anchor slot when projection snapped to a trading observation. */
+  xSlot?: number;
+  yRatio: number;
+  /** True when this point starts after a null, invalid, or log-hidden gap. */
+  breakBefore: boolean;
+}
+
+export interface CompositeCalendarTimeScale {
+  kind: "calendar";
+  startTime: number;
+  endTime: number;
+}
+
+export interface CompositeMarketTimeScale {
+  kind: "market";
+  startTime: number;
+  endTime: number;
+  anchorSeriesId: string;
+  cadenceMs: number;
+  anchors: Array<{
+    timestamp: number;
+    position: number;
+  }>;
+  startPosition: number;
+  endPosition: number;
+}
+
+export type CompositeTimeScale = CompositeCalendarTimeScale | CompositeMarketTimeScale;
+
+export interface CompositeProjectedSeries {
+  source: ResolvedSeries;
+  points: CompositeProjectedPoint[];
+}
+
+export interface CompositePanelScene {
+  id: string;
+  label?: string;
+  height: number;
+  scale: PanelScale;
+  axes: Partial<Record<CompositeAxisSide, CompositeAxisDomain>>;
+  series: CompositeProjectedSeries[];
+}
+
+export interface CompositeCursorValue {
+  seriesId: string;
+  label: string;
+  color: string;
+  unit: string;
+  value: number | null;
+  point: TimeSeriesPoint | null;
+}
+
+export interface CompositeChartScene {
+  width: number;
+  height: number;
+  startTime: number;
+  endTime: number;
+  timeScale: CompositeTimeScale;
+  dates: Date[];
+  /** Projected positions aligned with `dates`, used for pointer snapping. */
+  dateRatios: number[];
+  panels: CompositePanelScene[];
+  cursorDate: Date | null;
+  cursorXRatio: number | null;
+  cursorValues: CompositeCursorValue[];
+}
+
+export interface BuildCompositeChartSceneOptions {
+  width: number;
+  height: number;
+  cursorDate?: Date | null;
+  viewport?: {
+    start: Date;
+    end: Date;
+  };
+  /** Authored series order retained even when the primary anchor is hidden. */
+  timelineSeries?: ResolvedSeries[];
+}
+
+export interface CompositeChartProps {
+  series: ResolvedSeries[];
+  /** Optional legend model; can include hidden series that are not plotted. */
+  legendSeries?: ResolvedSeries[];
+  /** Optional hidden market series used to preserve session-time navigation. */
+  timelineSeries?: ResolvedSeries[];
+  panels: ChartPanelSpec[];
+  width: number;
+  height: number;
+  focused?: boolean;
+  interactive?: boolean;
+  /** Permit panning into an older unloaded window so the owner can backfill it. */
+  allowHistoricalBackfill?: boolean;
+  cursorDate?: Date | null;
+  viewport?: {
+    start: Date;
+    end: Date;
+  };
+  /**
+   * Stable identity for the authored viewport. Changing it resets user navigation;
+   * viewport updates under the same key are treated as adaptive data refreshes.
+   */
+  viewportResetKey?: string;
+  colors?: Partial<CompositeChartColors>;
+  axisWidth?: number;
+  showLegend?: boolean;
+  /** Show the regular-session percentage beside latest eligible legend values. */
+  showLatestChangePercent?: boolean;
+  legendAccessory?: ReactNode;
+  legendAccessoryWidth?: number;
+  showTimeAxis?: boolean;
+  emptyMessage?: string;
+  formatValue?: (value: number, series: ResolvedSeries) => string;
+  onCursorDateChange?: (date: Date | null) => void;
+  /** Reports a user-created viewport, or null when the user resets to the authored viewport. */
+  onViewportChange?: (
+    viewport: { start: Date; end: Date } | null,
+    interaction: "pan" | "reset" | "sync" | "zoom",
+  ) => void;
+  onActivate?: () => void;
+  onToggleSeries?: (seriesId: string) => void;
+  isSeriesToggleable?: (series: ResolvedSeries) => boolean;
+}

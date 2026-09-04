@@ -1,0 +1,492 @@
+import { Box, Text, useUiHost } from "../../../ui";
+import { TextAttributes } from "../../../ui";
+import { useShortcut } from "../../../react/input";
+import { type AlertContext, useDialog, useDialogKeyboard } from "../../../ui/dialog";
+import {
+  forwardRef,
+  type ForwardedRef,
+  type ReactNode,
+  useCallback,
+  useEffect,
+  useImperativeHandle,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
+import { colors } from "../../../theme/colors";
+import { isDetailBackNavigationKey } from "../../../utils/back-navigation";
+import { isPlainKey, isPlainKeyboardEvent } from "../../../utils/keyboard";
+import { ToggleList } from "../../toggle-list";
+import { Button } from "../button";
+import { Checkbox } from "../checkbox";
+import { DialogFrame } from "../frame";
+import { Popover } from "../popover";
+import {
+  getMultiSelectDisplayValues,
+  mergeMultiSelectDisplayValues,
+  moveMultiSelectDisplayValue,
+  moveMultiSelectValue,
+  normalizeMultiSelectValues,
+  normalizeOrderedMultiSelectValues,
+  orderMultiSelectOptionsForDisplay,
+  summarizeMultiSelectValues,
+  toggleOrderedMultiSelectValue,
+  toggleMultiSelectValue,
+  type MultiSelectOption,
+} from "./index";
+
+export interface MultiSelectDialogContentProps extends AlertContext {
+  title: string;
+  options: MultiSelectOption[];
+  selectedValues: string[];
+  onChange: (values: string[]) => Promise<void> | void;
+  ordered?: boolean;
+  emptyLabel?: string;
+  idPrefix?: string;
+}
+
+export interface MultiSelectDialogButtonProps {
+  label: string;
+  title?: string;
+  options: MultiSelectOption[];
+  selectedValues: string[];
+  onChange: (values: string[]) => Promise<void> | void;
+  disabled?: boolean;
+  emptyLabel?: string;
+  ordered?: boolean;
+  idPrefix?: string;
+  renderTrigger?: (props: MultiSelectDialogTriggerProps) => ReactNode;
+  shortcutKey?: string | string[];
+  shortcutActive?: boolean;
+  onOpenChange?: (open: boolean) => void;
+}
+
+export interface MultiSelectPopoverAnchorPoint {
+  x: number;
+  y: number;
+}
+
+export interface MultiSelectDialogButtonHandle {
+  open(anchorPoint?: MultiSelectPopoverAnchorPoint): void;
+  close(): void;
+}
+
+type DialogTriggerEvent = { stopPropagation?: () => void; preventDefault?: () => void };
+
+interface MultiSelectDialogTriggerProps {
+  buttonLabel: string;
+  buttonText: string;
+  summary: string;
+  disabled: boolean;
+  openDialog: (event?: DialogTriggerEvent) => void;
+  stopMouseEvent: (event?: DialogTriggerEvent) => void;
+}
+
+function isSpaceKey(event: { name?: string; sequence?: string }): boolean {
+  return event.name === "space" || event.name === " " || event.sequence === " ";
+}
+
+function stopMouseEvent(event?: DialogTriggerEvent) {
+  event?.stopPropagation?.();
+  event?.preventDefault?.();
+}
+
+function matchesShortcut(
+  event: { name?: string; sequence?: string; ctrl?: boolean; meta?: boolean; super?: boolean; alt?: boolean; option?: boolean; shift?: boolean },
+  shortcutKey: string | string[] | undefined,
+): boolean {
+  if (!shortcutKey || !isPlainKeyboardEvent(event)) return false;
+  const keys = Array.isArray(shortcutKey) ? shortcutKey : [shortcutKey];
+  const name = event.name?.toLowerCase() ?? "";
+  const sequence = event.sequence?.toLowerCase() ?? "";
+  return keys.some((key) => {
+    const normalized = key.toLowerCase();
+    return normalized === name || normalized === sequence;
+  });
+}
+
+function DesktopMultiSelectMenu({
+  title,
+  options,
+  selectedValues: selectedValuesProp,
+  onChange,
+  emptyLabel,
+}: Pick<MultiSelectDialogContentProps, "title" | "options" | "selectedValues" | "onChange" | "emptyLabel">) {
+  const [selectedValues, setSelectedValues] = useState(() => normalizeMultiSelectValues(options, selectedValuesProp));
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    setSelectedValues(normalizeMultiSelectValues(options, selectedValuesProp));
+  }, [options, selectedValuesProp]);
+
+  const toggleOption = async (option: MultiSelectOption) => {
+    if (option.disabled) return;
+    const previous = selectedValues;
+    const next = toggleMultiSelectValue(options, selectedValues, option.value);
+    setSelectedValues(next);
+    setError(null);
+    try {
+      await onChange(next);
+    } catch (nextError) {
+      setSelectedValues(previous);
+      setError(nextError instanceof Error ? nextError.message : "Could not update selection.");
+    }
+  };
+
+  return (
+    <Box flexDirection="column" width="300px" maxWidth="calc(100vw - 40px)" style={{ gap: 6 }}>
+      <Text fg={colors.textBright} attributes={TextAttributes.BOLD} style={{ fontWeight: 700, padding: "1px 4px 4px" }}>
+        {title}
+      </Text>
+      {options.length === 0 ? (
+        <Text fg={colors.textMuted} style={{ padding: "4px" }}>{emptyLabel ?? "None"}</Text>
+      ) : (
+        <Box flexDirection="column" style={{ gap: 2 }}>
+          {options.map((option) => (
+            <Box
+              key={option.value}
+              width="100%"
+              flexDirection="column"
+              style={{ borderRadius: 6, padding: "5px 6px" }}
+              hoverBackgroundColor="color-mix(in srgb, var(--gloom-text-bright) 7%, transparent)"
+            >
+              <Checkbox
+                label={option.label}
+                checked={selectedValues.includes(option.value)}
+                disabled={option.disabled}
+                description={option.description}
+                width="100%"
+                variant="desktop"
+                onChange={() => { void toggleOption(option); }}
+              />
+            </Box>
+          ))}
+        </Box>
+      )}
+      {error ? <Text fg={colors.negative} wrapText style={{ padding: "4px" }}>{error}</Text> : null}
+    </Box>
+  );
+}
+
+function normalizeDialogSelectedValues(
+  options: readonly MultiSelectOption[],
+  values: readonly string[],
+  ordered: boolean,
+): string[] {
+  return ordered
+    ? normalizeOrderedMultiSelectValues(options, values)
+    : normalizeMultiSelectValues(options, values);
+}
+
+export function MultiSelectDialogContent({
+  dismiss,
+  dialogId,
+  title,
+  options,
+  selectedValues: selectedValuesProp,
+  onChange,
+  ordered = false,
+  idPrefix,
+}: MultiSelectDialogContentProps) {
+  const isDesktopWeb = useUiHost().kind === "desktop-web";
+  const optionByValue = useMemo(() => new Map(options.map((option) => [option.value, option])), [options]);
+  const [selectedValues, setSelectedValues] = useState(() => normalizeDialogSelectedValues(options, selectedValuesProp, ordered));
+  const [displayValues, setDisplayValues] = useState(() => getMultiSelectDisplayValues(options, selectedValuesProp, ordered));
+  const knownSelectedValues = selectedValues.filter((value) => optionByValue.has(value));
+  const displayOptions = useMemo(
+    () => orderMultiSelectOptionsForDisplay(options, displayValues),
+    [displayValues, options],
+  );
+  const [selectedOptionId, setSelectedOptionId] = useState(options[0]?.value ?? "");
+  const selectedIndex = Math.max(0, displayOptions.findIndex((option) => option.value === selectedOptionId));
+  const selectedOption = displayOptions[selectedIndex];
+  const selectedOptionValue = selectedOption?.value ?? "";
+  const selectedValueOrder = knownSelectedValues.indexOf(selectedOptionValue);
+  const canMoveUp = ordered && selectedValueOrder > 0;
+  const canMoveDown = ordered
+    && selectedValueOrder >= 0
+    && selectedValueOrder < knownSelectedValues.length - 1;
+
+  useEffect(() => {
+    setSelectedValues((values) => normalizeDialogSelectedValues(options, values, ordered));
+    setDisplayValues((values) => mergeMultiSelectDisplayValues(options, values));
+  }, [options, ordered]);
+
+  useEffect(() => {
+    if (displayOptions.some((option) => option.value === selectedOptionId)) return;
+    setSelectedOptionId(displayOptions[0]?.value ?? "");
+  }, [displayOptions, selectedOptionId]);
+
+  const toggleItems = displayOptions.map((option) => {
+    const order = knownSelectedValues.indexOf(option.value);
+    const orderDescription = ordered && order >= 0
+      ? `Order ${order + 1} of ${knownSelectedValues.length}.`
+      : null;
+
+    return {
+      id: option.value,
+      label: option.label,
+      disabled: option.disabled,
+      enabled: selectedValues.includes(option.value),
+      description: [option.description, orderDescription].filter((entry): entry is string => !!entry).join(" "),
+    };
+  });
+  const listHeight = isDesktopWeb
+    ? Math.min(12, Math.max(5, displayOptions.length * 1.35))
+    : Math.min(12, Math.max(6, toggleItems.length));
+
+  const applySelectedValues = async (nextValues: string[], nextDisplayValues = displayValues) => {
+    const previousValues = selectedValues;
+    const previousDisplayValues = displayValues;
+    setSelectedValues(nextValues);
+    setDisplayValues(nextDisplayValues);
+    try {
+      await onChange(nextValues);
+    } catch (error) {
+      setSelectedValues(previousValues);
+      setDisplayValues(previousDisplayValues);
+      throw error;
+    }
+  };
+
+  const toggleOption = async (option: MultiSelectOption | undefined) => {
+    if (!option || option.disabled) return;
+    await applySelectedValues(ordered
+      ? toggleOrderedMultiSelectValue(options, selectedValues, option.value)
+      : toggleMultiSelectValue(options, selectedValues, option.value));
+  };
+
+  const moveOption = async (direction: "up" | "down") => {
+    if (!ordered || !selectedOption) return;
+    await applySelectedValues(
+      moveMultiSelectValue(options, selectedValues, selectedOption.value, direction),
+      moveMultiSelectDisplayValue(displayValues, knownSelectedValues, selectedOption.value, direction),
+    );
+  };
+
+  useDialogKeyboard((event) => {
+    event.stopPropagation();
+    if (isPlainKey(event, "up", "k")) {
+      const nextIndex = Math.max(0, selectedIndex - 1);
+      setSelectedOptionId(displayOptions[nextIndex]?.value ?? selectedOptionId);
+    } else if (isPlainKey(event, "down", "j")) {
+      const nextIndex = Math.min(displayOptions.length - 1, selectedIndex + 1);
+      setSelectedOptionId(displayOptions[nextIndex]?.value ?? selectedOptionId);
+    } else if (isSpaceKey(event)) {
+      void toggleOption(selectedOption).catch(() => {});
+    } else if (event.name === "[" && ordered) {
+      void moveOption("up").catch(() => {});
+    } else if (event.name === "]" && ordered) {
+      void moveOption("down").catch(() => {});
+    } else if (event.name === "enter" || event.name === "return" || event.name === "escape" || isDetailBackNavigationKey(event)) {
+      dismiss();
+    }
+  }, dialogId);
+
+  return (
+    <DialogFrame title={title} showTitleDivider={!isDesktopWeb}>
+      <Box
+        flexDirection="column"
+        gap={1}
+        style={isDesktopWeb ? { minWidth: 520 } : undefined}
+      >
+        <ToggleList
+          items={toggleItems}
+          selectedIdx={selectedIndex}
+          bgColor={isDesktopWeb ? "transparent" : colors.commandBg}
+          height={listHeight}
+          scrollable
+          showSelectedDescription={false}
+          rowIdPrefix={idPrefix ? `${idPrefix}:option` : undefined}
+          rowGap={isDesktopWeb ? 0 : undefined}
+          rowHeight={isDesktopWeb ? 1.35 : undefined}
+          surface={isDesktopWeb ? "plain" : undefined}
+          onSelect={(index) => setSelectedOptionId(displayOptions[index]?.value ?? selectedOptionId)}
+          onToggle={(id) => {
+            setSelectedOptionId(id);
+            void toggleOption(optionByValue.get(id)).catch(() => {});
+          }}
+        />
+        <Box
+          flexDirection="row"
+          gap={1}
+          justifyContent={isDesktopWeb ? "flex-end" : undefined}
+          style={isDesktopWeb ? { paddingTop: 6 } : undefined}
+        >
+          {ordered && (
+            <>
+              <Button label="Move Up" variant="ghost" disabled={!canMoveUp} onPress={() => { void moveOption("up").catch(() => {}); }} />
+              <Button label="Move Down" variant="ghost" disabled={!canMoveDown} onPress={() => { void moveOption("down").catch(() => {}); }} />
+            </>
+          )}
+          <Button label="Done" variant="primary" onPress={dismiss} />
+        </Box>
+      </Box>
+    </DialogFrame>
+  );
+}
+
+function MultiSelectDialogButtonInner({
+  label,
+  title,
+  options,
+  selectedValues,
+  onChange,
+  disabled = false,
+  emptyLabel = "None",
+  ordered = false,
+  idPrefix,
+  renderTrigger,
+  shortcutKey,
+  shortcutActive = false,
+  onOpenChange,
+}: MultiSelectDialogButtonProps, ref: ForwardedRef<MultiSelectDialogButtonHandle>) {
+  const isDesktopWeb = useUiHost().kind === "desktop-web";
+  const dialog = useDialog();
+  const triggerMouseDownRef = useRef(false);
+  const [popoverOpen, setPopoverOpen] = useState(false);
+  const [popoverAnchorPoint, setPopoverAnchorPoint] = useState<MultiSelectPopoverAnchorPoint | null>(null);
+  const summary = summarizeMultiSelectValues({ options, selectedValues, emptyLabel });
+  const buttonLabel = `${label}: ${summary}`;
+  const buttonText = ` ${buttonLabel} `;
+  const openDialog = useCallback((event?: DialogTriggerEvent, anchorPoint?: MultiSelectPopoverAnchorPoint) => {
+    stopMouseEvent(event);
+    if (disabled) return;
+    if (isDesktopWeb && !ordered) {
+      setPopoverAnchorPoint(anchorPoint ?? null);
+      setPopoverOpen(true);
+      onOpenChange?.(true);
+      return;
+    }
+    onOpenChange?.(true);
+    void dialog.alert({
+      closeOnClickOutside: true,
+      content: (ctx: AlertContext) => (
+        <MultiSelectDialogContent
+          {...ctx}
+          title={title ?? label}
+          options={options}
+          selectedValues={selectedValues}
+          onChange={onChange}
+          ordered={ordered}
+          emptyLabel={emptyLabel}
+          idPrefix={idPrefix}
+        />
+      ),
+    }).catch(() => {}).finally(() => onOpenChange?.(false));
+  }, [dialog, disabled, emptyLabel, idPrefix, isDesktopWeb, label, onChange, onOpenChange, options, ordered, selectedValues, title]);
+
+  const closePopover = useCallback(() => {
+    setPopoverOpen(false);
+    setPopoverAnchorPoint(null);
+    onOpenChange?.(false);
+  }, [onOpenChange]);
+  useImperativeHandle(ref, () => ({
+    open: (anchorPoint) => openDialog(undefined, anchorPoint),
+    close: closePopover,
+  }), [closePopover, openDialog]);
+
+  useEffect(() => {
+    if (!disabled) return;
+    setPopoverOpen(false);
+    onOpenChange?.(false);
+  }, [disabled, onOpenChange]);
+
+  useShortcut((event) => {
+    if (!shortcutActive || disabled || !matchesShortcut(event, shortcutKey)) return;
+    openDialog(event);
+  });
+
+  let trigger: ReactNode;
+  if (renderTrigger) {
+    trigger = renderTrigger({
+      buttonLabel,
+      buttonText,
+      summary,
+      disabled,
+      openDialog,
+      stopMouseEvent,
+    });
+  } else if (isDesktopWeb) {
+    trigger = (
+      <Box
+        id={idPrefix ? `${idPrefix}:button` : undefined}
+        height={1}
+        flexDirection="row"
+        onMouseDown={stopMouseEvent}
+        onMouseUp={stopMouseEvent}
+      >
+        <Button
+          label={buttonLabel}
+          variant="secondary"
+          disabled={disabled}
+          onPress={() => openDialog()}
+        />
+      </Box>
+    );
+  } else {
+    const startTriggerPress = (event?: DialogTriggerEvent) => {
+      triggerMouseDownRef.current = true;
+      stopMouseEvent(event);
+    };
+    const finishTriggerPress = (event?: DialogTriggerEvent) => {
+      const startedOnTrigger = triggerMouseDownRef.current;
+      triggerMouseDownRef.current = false;
+      if (startedOnTrigger) openDialog(event);
+      else stopMouseEvent(event);
+    };
+    trigger = (
+      <Box
+        id={idPrefix ? `${idPrefix}:button` : undefined}
+        height={1}
+        width={buttonText.length}
+        flexDirection="row"
+        backgroundColor={disabled ? colors.panel : colors.selected}
+        onMouseDown={startTriggerPress}
+        onMouseUp={finishTriggerPress}
+      >
+        <Text
+          fg={disabled ? colors.textMuted : colors.selectedText}
+          attributes={TextAttributes.BOLD}
+          onMouseDown={startTriggerPress}
+          onMouseUp={finishTriggerPress}
+        >
+          {buttonText}
+        </Text>
+      </Box>
+    );
+  }
+
+  if (isDesktopWeb && !ordered) {
+    return (
+      <Popover
+        open={popoverOpen}
+        onOpenChange={(open) => {
+          setPopoverOpen(open);
+          if (!open) setPopoverAnchorPoint(null);
+          onOpenChange?.(open);
+        }}
+        trigger={trigger}
+        anchorPoint={popoverAnchorPoint}
+        placement="bottom-start"
+        minWidth={300}
+        label={title ?? label}
+      >
+        <DesktopMultiSelectMenu
+          title={title ?? label}
+          options={options}
+          selectedValues={selectedValues}
+          onChange={onChange}
+          emptyLabel={emptyLabel}
+        />
+      </Popover>
+    );
+  }
+
+  return trigger;
+}
+
+export const MultiSelectDialogButton = forwardRef(MultiSelectDialogButtonInner);
+MultiSelectDialogButton.displayName = "MultiSelectDialogButton";
+
+export type { MultiSelectOption };

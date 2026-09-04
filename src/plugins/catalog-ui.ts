@@ -1,0 +1,57 @@
+import type { GloomPlugin } from "../types/plugin";
+import { newsPlugin } from "./builtin/news";
+import { notesPlugin } from "./builtin/notes";
+import { substackPlugin } from "./builtin/substack";
+import { aiPlugin } from "./builtin/ai";
+import { gloomberbCloudPlugin } from "./builtin/cloud";
+import { ibkrPlugin } from "./ibkr";
+import { publicPlugin } from "./broker-sync/public";
+import { robinhoodPlugin } from "./broker-sync/robinhood";
+import { simpleFinPlugin } from "./broker-sync/simplefin";
+import { predictionMarketsPlugin } from "./prediction-markets";
+import { pollsPlugin } from "./builtin/polls";
+import { alertsPlugin } from "./builtin/alerts";
+import { reconciliationPlugin } from "./builtin/reconciliation";
+import { exceptionQueuePlugin } from "./builtin/exception-queue";
+import { treasuryForecastPlugin } from "./builtin/treasury-forecast";
+import { invoicesLedgerPlugin } from "./builtin/invoices-ledger";
+import { bankFeedsPlugin } from "./builtin/bank-feeds";
+import {
+  applicationPlugin,
+  brokerPlugin,
+  macroPlugin,
+  marketOverviewPlugin,
+  portfolioPlugin,
+} from "./builtin/composite-plugins";
+import { tickerResearchPlugin } from "./builtin/ticker-research-plugin";
+
+export const uiBuiltinPlugins: GloomPlugin[] = [
+  reconciliationPlugin,
+  exceptionQueuePlugin,
+  invoicesLedgerPlugin,
+  bankFeedsPlugin,
+  treasuryForecastPlugin,
+  gloomberbCloudPlugin,
+  portfolioPlugin,
+  tickerResearchPlugin,
+  brokerPlugin,
+  ibkrPlugin,
+  publicPlugin,
+  robinhoodPlugin,
+  simpleFinPlugin,
+  applicationPlugin,
+  newsPlugin,
+  substackPlugin,
+  notesPlugin,
+  aiPlugin,
+  predictionMarketsPlugin,
+  pollsPlugin,
+  marketOverviewPlugin,
+  macroPlugin,
+  alertsPlugin,
+];
+
+export function getRendererBuiltinPlugins(): GloomPlugin[] {
+  return uiBuiltinPlugins;
+}
+

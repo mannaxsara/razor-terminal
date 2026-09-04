@@ -1,0 +1,36 @@
+import { useCallback, useRef } from "react";
+
+interface LastClickState {
+  targetKey: string;
+}
+
+interface ClickEventLike {
+  detail?: number;
+}
+
+export function useDoubleClickActivation<T>({
+  onSelect,
+  onActivate,
+}: {
+  onSelect?: (value: T) => void;
+  onActivate?: (value: T) => void;
+}) {
+  const lastClickRef = useRef<LastClickState | null>(null);
+
+  return useCallback((targetKey: string, value: T, event?: ClickEventLike) => {
+    const lastClick = lastClickRef.current;
+
+    onSelect?.(value);
+
+    if ((typeof event?.detail === "number" && event.detail >= 2)
+        || (lastClick && lastClick.targetKey === targetKey)) {
+      lastClickRef.current = null;
+      onActivate?.(value);
+      return;
+    }
+
+    lastClickRef.current = {
+      targetKey,
+    };
+  }, [onActivate, onSelect]);
+}
