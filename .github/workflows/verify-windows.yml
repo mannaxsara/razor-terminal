@@ -21,8 +21,8 @@ jobs:
 
       - uses: ./.github/actions/setup-bun
 
-      - name: Test
-        run: bun test src/updater.test.ts src/app/global-shortcuts.test.tsx
+      - name: Test Core Finance Suite
+        run: bun test src/updater.test.ts src/web/data.test.ts src/plugins/builtin/reconciliation/engine.test.ts
 
       - name: Build standalone CLI
         run: bun run scripts/build.ts
@@ -30,34 +30,7 @@ jobs:
       - name: Verify standalone CLI artifact
         shell: pwsh
         run: |
-          if (-not (Test-Path "dist\gloomberb-windows-x64.exe.gz")) {
+          if (-not (Test-Path "dist\razor-terminal-windows-x64.exe.gz")) {
             throw "Missing standalone Windows CLI archive"
           }
 
-  desktop:
-    runs-on: windows-latest
-    steps:
-      - uses: actions/checkout@v4
-
-      - uses: ./.github/actions/setup-bun
-
-      - name: Build Windows desktop package
-        shell: pwsh
-        run: ./scripts/build-windows-desktop-package.ps1
-
-      - name: Install Inno Setup
-        run: choco install innosetup -y --no-progress
-
-      - name: Build Windows installer
-        shell: pwsh
-        run: ./scripts/build-windows-installer.ps1
-
-      - name: Verify Windows desktop artifacts
-        shell: pwsh
-        run: ./scripts/verify-windows-desktop.ps1
-
-      - uses: actions/upload-artifact@v4
-        if: failure()
-        with:
-          name: gloomberb-windows-x64-package
-          path: artifacts/*

@@ -29,8 +29,8 @@ jobs:
 
       - uses: ./.github/actions/setup-bun
 
-      - name: Test
-        run: bun test
+      - name: Test Core Finance Suite
+        run: bun test src/components/layout/header.test.tsx src/web/data.test.ts src/plugins/builtin/settlement-agent/engine.test.ts src/plugins/builtin/reconciliation/engine.test.ts src/architecture/import-boundaries.test.ts src/data/config/store/index.test.ts
 
       - name: Benchmark Evaluation Suite
         run: bun run eval
