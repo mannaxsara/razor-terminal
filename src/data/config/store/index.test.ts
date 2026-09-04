@@ -6,6 +6,7 @@ import { exportConfig, importConfig, loadConfig, sanitizeLayout, saveConfig } fr
 import {
   CURRENT_CONFIG_VERSION,
   DEFAULT_COLUMNS,
+  DEFAULT_HOME_LAYOUT,
   DEFAULT_LAYOUT,
   DEFAULT_PORTFOLIO_COLUMN_IDS,
   findPaneInstance,
@@ -49,33 +50,33 @@ async function writeConfigJson(dataDir: string, config: Record<string, unknown>)
 }
 
 describe("sanitizeLayout", () => {
-  test("ships a focused Home layout with portfolio, chat, and following research", () => {
+  test("ships a focused Finance layout with reconciliation, exception queue, settlement agent, and feeds", () => {
     expect(DEFAULT_LAYOUT.instances.map((instance) => instance.instanceId)).toEqual([
-      "portfolio-list:main",
-      "ticker-detail:main",
-      "chat:main",
+      "reconciliation:main",
+      "exception-queue:main",
+      "settlement-agent:main",
+      "invoices-ledger:main",
+      "bank-feeds:main",
+      "treasury-forecast:main",
     ]);
     expect(getDockedPaneIds(DEFAULT_LAYOUT)).toEqual([
-      "portfolio-list:main",
-      "chat:main",
-      "ticker-detail:main",
+      "reconciliation:main",
+      "exception-queue:main",
+      "settlement-agent:main",
+      "invoices-ledger:main",
+      "bank-feeds:main",
+      "treasury-forecast:main",
     ]);
     expect(DEFAULT_LAYOUT.dockRoot).toMatchObject({
       kind: "split",
-      axis: "horizontal",
-      ratio: 0.34,
-      first: {
-        kind: "split",
-        axis: "vertical",
-        ratio: 0.6,
-      },
-      second: { kind: "pane", instanceId: "ticker-detail:main" },
+      axis: "vertical",
+      ratio: 0.55,
     });
     expect(DEFAULT_LAYOUT.floating).toEqual([]);
   });
 
   test("keeps the default research layout free of retired chart settings", () => {
-    const researchPanes = DEFAULT_LAYOUT.instances.filter((instance) => instance.paneId === "ticker-research");
+    const researchPanes = DEFAULT_HOME_LAYOUT.instances.filter((instance) => instance.paneId === "ticker-research");
     expect(researchPanes.length).toBeGreaterThan(0);
     for (const pane of researchPanes) {
       expect(pane.settings).not.toHaveProperty("chartRangePreset");
@@ -777,7 +778,7 @@ describe("loadConfig", () => {
       configVersion: 19,
       layouts: [{
         name: "Chart",
-        layout: DEFAULT_LAYOUT,
+        layout: DEFAULT_HOME_LAYOUT,
         paneState: {
           "ticker-detail:main": {
             activeTabId: "fundamental-graphs",
@@ -826,8 +827,8 @@ describe("loadConfig", () => {
     const dataDir = await createTempConfigDir();
     const selectedPortfolioColumns = DEFAULT_COLUMNS.map((column) => column.id);
     const currentLayout = {
-      ...DEFAULT_LAYOUT,
-      instances: DEFAULT_LAYOUT.instances.map((instance) => (
+      ...DEFAULT_HOME_LAYOUT,
+      instances: DEFAULT_HOME_LAYOUT.instances.map((instance) => (
         instance.instanceId === "ticker-detail:main"
           ? {
             ...instance,
@@ -900,8 +901,8 @@ describe("loadConfig", () => {
     const dataDir = await createTempConfigDir();
     const legacyColumnIds = DEFAULT_COLUMNS.map((column) => column.id);
     const legacyLayout = {
-      ...DEFAULT_LAYOUT,
-      instances: DEFAULT_LAYOUT.instances.map((instance) => (
+      ...DEFAULT_HOME_LAYOUT,
+      instances: DEFAULT_HOME_LAYOUT.instances.map((instance) => (
         instance.instanceId === "portfolio-list:main"
           ? {
             ...instance,
@@ -923,7 +924,7 @@ describe("loadConfig", () => {
     const config = await loadConfig(dataDir);
 
     expect(findPaneInstance(config.layout, "portfolio-list:main")?.settings?.columnIds).toEqual(DEFAULT_PORTFOLIO_COLUMN_IDS);
-    expect(findPaneInstance(config.layouts[0]?.layout ?? DEFAULT_LAYOUT, "portfolio-list:main")?.settings?.columnIds)
+    expect(findPaneInstance(config.layouts[0]?.layout ?? DEFAULT_HOME_LAYOUT, "portfolio-list:main")?.settings?.columnIds)
       .toEqual(DEFAULT_PORTFOLIO_COLUMN_IDS);
   });
 
@@ -931,8 +932,8 @@ describe("loadConfig", () => {
     const dataDir = await createTempConfigDir();
     const selectedColumnIds = DEFAULT_COLUMNS.map((column) => column.id);
     const layout = {
-      ...DEFAULT_LAYOUT,
-      instances: DEFAULT_LAYOUT.instances.map((instance) => (
+      ...DEFAULT_HOME_LAYOUT,
+      instances: DEFAULT_HOME_LAYOUT.instances.map((instance) => (
         instance.instanceId === "portfolio-list:main"
           ? {
             ...instance,
@@ -954,7 +955,7 @@ describe("loadConfig", () => {
     const config = await loadConfig(dataDir);
 
     expect(findPaneInstance(config.layout, "portfolio-list:main")?.settings?.columnIds).toEqual(selectedColumnIds);
-    expect(findPaneInstance(config.layouts[0]?.layout ?? DEFAULT_LAYOUT, "portfolio-list:main")?.settings?.columnIds)
+    expect(findPaneInstance(config.layouts[0]?.layout ?? DEFAULT_HOME_LAYOUT, "portfolio-list:main")?.settings?.columnIds)
       .toEqual(selectedColumnIds);
   });
 
@@ -1014,15 +1015,15 @@ describe("config backup files", () => {
 
     try {
       const config = await loadConfig(dataDir);
-      await exportConfig({ ...config, baseCurrency: "EUR" }, "~/gloomberb-config-backup.json");
+      await exportConfig({ ...config, baseCurrency: "EUR" }, "~/razor-terminal-config-backup.json");
 
-      const backupPath = join(homeDir, "gloomberb-config-backup.json");
+      const backupPath = join(homeDir, "razor-terminal-config-backup.json");
       const exported = JSON.parse(await readFile(backupPath, "utf-8")) as Record<string, unknown>;
       expect(exported.baseCurrency).toBe("EUR");
       expect(exported.dataDir).toBeUndefined();
 
       await writeFile(backupPath, JSON.stringify({ ...exported, baseCurrency: "JPY" }), "utf-8");
-      const imported = await importConfig(importDataDir, "~/gloomberb-config-backup.json");
+      const imported = await importConfig(importDataDir, "~/razor-terminal-config-backup.json");
 
       expect(imported.baseCurrency).toBe("JPY");
       expect(imported.dataDir).toBe(importDataDir);

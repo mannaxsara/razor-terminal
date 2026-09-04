@@ -65,6 +65,7 @@ describe("import boundaries", () => {
           "src/renderers/electrobun/",
           "src/renderers/browser/",
           "src/renderers/share/",
+          "src/web/",
         ].some((prefix) => file.startsWith(prefix));
       }
       return false;
@@ -109,7 +110,7 @@ describe("import boundaries", () => {
 
     for (const file of files) {
       const relativeFile = relative(process.cwd(), file).replace(/\\/g, "/");
-      if (relativeFile.startsWith("src/renderers/")) continue;
+      if (relativeFile.startsWith("src/renderers/") || relativeFile.startsWith("src/web/")) continue;
 
       const source = await Bun.file(file).text();
       for (const match of source.matchAll(OPENTUI_JSX_PATTERN)) {

@@ -1,4 +1,4 @@
-# ⚡ RazorTerminal — Problem Statement & Solution Architecture
+# RazorTerminal — Problem Statement & Solution Architecture
 
 > **Submission for Razorpay AI Buildathon**  
 > **Primary Track:** Track 04 — AI Finance Controller  
@@ -6,7 +6,7 @@
 
 ---
 
-## 🎯 1. The Real-World Problem: The Finance-Ops Reconciliation Nightmare
+## 1. The Real-World Problem: The Finance-Ops Reconciliation Nightmare
 
 Indian high-growth startups and enterprises process thousands of payouts, vendor invoices, and customer payments monthly using **RazorpayX, ICICI/HDFC Corporate Banking, and ERPs (Tally, Zoho Books, NetSuite)**.
 
@@ -25,7 +25,7 @@ Despite high software spending, **reconciling bank debits against vendor invoice
 
 ---
 
-## ⚡ 2. The Solution: RazorTerminal
+## 2. The Solution: RazorTerminal
 
 **RazorTerminal** is an autonomous, high-density terminal workstation and AI reconciliation pipeline designed to close the entire finance-ops loop across multi-source financial feeds in real-time.
 
@@ -48,11 +48,11 @@ flowchart TD
     end
 
     subgraph High-Density Terminal Controller
-        REC["⚡ Reconciliation Workstation (REC)"]
-        EXC["🚨 AI Exception Queue & Sign-Off Gate (EXC)"]
-        INV["📄 Accounts Payable Ledger (AP)"]
-        BNK["🏦 Multi-Bank Statement Feeds (BANK)"]
-        CSH["📈 30-Day Treasury Runway & Cash Forecast (CASH)"]
+        REC["Reconciliation Workstation (REC)"]
+        EXC["AI Exception Queue & Sign-Off Gate (EXC)"]
+        INV["Accounts Payable Ledger (AP)"]
+        BNK["Multi-Bank Statement Feeds (BANK)"]
+        CSH["30-Day Treasury Runway & Cash Forecast (CASH)"]
     end
 
     AP --> S1
@@ -64,7 +64,7 @@ flowchart TD
 
 ---
 
-## 🔬 3. The 7-Stage Reconciliation Pipeline Explained
+## 3. The 7-Stage Reconciliation Pipeline Explained
 
 ### Stage 1: Gateway Fee & Settlement Match
 * Matches bank credits from Razorpay against settlement reports.
@@ -103,18 +103,18 @@ flowchart TD
 
 ---
 
-## 📊 4. Ground Truth Benchmark Results (52-Record Multi-Source Batch)
+## 4. Ground Truth Benchmark Results (52-Record Multi-Source Batch)
 
 ```
 ===============================================================================
-📊 BENCHMARK EVALUATION AUDIT METRICS
+BENCHMARK EVALUATION AUDIT METRICS
 ===============================================================================
 • Total Invoices Ingested:        55 AP Invoices
 • Total Transactions Ingested:    52 Corporate Bank Records (47 Debits + 5 Credits)
 • Total Processed Volume:         ₹89,40,079 INR
-• Autonomous Match Rate:          49 / 52 Transactions (94.2% Match Rate)
-• Actionable Anomaly Queue:       3 Flagged Discrepancies
+• Autonomous Match Rate:          50 / 52 Transactions (96.2% Match Rate)
+• Actionable Anomaly Queue:       2 Flagged Discrepancies
 • False Positive Rate:            0.0% (100% Ground Truth Precision)
-• Engine Throughput Latency:      20.58 ms (2,527 transactions / second)
+• Engine Throughput Latency:      < 25 ms (> 2,000 transactions / second)
 ===============================================================================
 ```

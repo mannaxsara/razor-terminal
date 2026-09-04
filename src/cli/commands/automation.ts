@@ -145,7 +145,7 @@ export function createAiCliCommand(options: CreateAiCliCommandOptions = {}): Cli
         return;
       }
       if (action !== "providers" && action !== "ask") {
-        ctx.fail("Usage: gloomberb ai providers|ask|screen");
+        ctx.fail("Usage: razor-terminal ai providers|ask|screen");
       }
 
       const rawArgs = args.slice(1);
@@ -153,7 +153,7 @@ export function createAiCliCommand(options: CreateAiCliCommandOptions = {}): Cli
       const requestedModel = takeOption(rawArgs, "--model")?.trim();
       const prompt = rawArgs.join(" ").trim();
       if (action === "ask" && !prompt) {
-        ctx.fail("Usage: gloomberb ai ask [--provider id] [--model id] <prompt>");
+        ctx.fail("Usage: razor-terminal ai ask [--provider id] [--model id] <prompt>");
       }
 
       await withConfigData(ctx, async (context) => {
@@ -236,10 +236,10 @@ export const rssCliCommand: CliCommandDef = {
   help: { usage: ["rss fetch <url> [--name label]"] },
   execute: async (args, ctx) => {
     const action = args[0] ?? "fetch";
-    if (action !== "fetch") ctx.fail("Usage: gloomberb rss fetch <url> [--name label]");
+    if (action !== "fetch") ctx.fail("Usage: razor-terminal rss fetch <url> [--name label]");
     const rawArgs = args.slice(1);
     const name = takeOption(rawArgs, "--name") ?? "RSS";
-    const url = requireArg(rawArgs[0], "Usage: gloomberb rss fetch <url> [--name label]", ctx);
+    const url = requireArg(rawArgs[0], "Usage: razor-terminal rss fetch <url> [--name label]", ctx);
     const capability = createRssNewsCapability([{
       id: "cli-feed",
       url,

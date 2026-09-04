@@ -7,7 +7,13 @@ import { debugLog } from "../utils/debug-log";
 
 const loaderLog = debugLog.createLogger("plugin-loader");
 
-const PLUGINS_DIR = join(process.env.HOME || homedir(), ".gloomberb", "plugins");
+function resolvePluginsDir(): string {
+  const primary = join(process.env.HOME || homedir(), ".razor-terminal", "plugins");
+  if (existsSync(primary)) return primary;
+  const legacy = join(process.env.HOME || homedir(), ".gloomberb", "plugins");
+  if (existsSync(legacy)) return legacy;
+  return primary;
+}
 
 export interface LoadedExternalPlugin {
   plugin: GloomPlugin;
@@ -16,18 +22,19 @@ export interface LoadedExternalPlugin {
 }
 
 export function getPluginsDir(): string {
-  return PLUGINS_DIR;
+  return resolvePluginsDir();
 }
 
 export async function loadExternalPlugins(): Promise<LoadedExternalPlugin[]> {
-  if (!existsSync(PLUGINS_DIR)) return [];
+  const pluginsDir = resolvePluginsDir();
+  if (!existsSync(pluginsDir)) return [];
 
   const results: LoadedExternalPlugin[] = [];
-  const entries = await readdir(PLUGINS_DIR, { withFileTypes: true });
+  const entries = await readdir(pluginsDir, { withFileTypes: true });
 
   for (const entry of entries) {
     if (!entry.isDirectory()) continue;
-    const pluginDir = join(PLUGINS_DIR, entry.name);
+    const pluginDir = join(pluginsDir, entry.name);
 
     // Look for entry file
     let entryFile: string | null = null;

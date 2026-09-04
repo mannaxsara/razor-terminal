@@ -56,7 +56,7 @@ export async function installPlugin(ref: string) {
   const targetDir = join(PLUGINS_DIR, name);
 
   if (existsSync(targetDir)) {
-    fail(`Plugin "${name}" already exists.`, `Use "gloomberb update ${name}" to refresh it.`);
+    fail(`Plugin "${name}" already exists.`, `Use "razor-terminal update ${name}" to refresh it.`);
   }
 
   console.log(cliStyles.accent(`Installing ${name}`));
@@ -155,7 +155,7 @@ export function listPlugins() {
 
   if (entries.length === 0) {
     console.log(cliStyles.muted("No plugins installed."));
-    console.log(cliStyles.muted("Install one with: gloomberb install <github-user/repo>"));
+    console.log(cliStyles.muted("Install one with: razor-terminal install <github-user/repo>"));
     return;
   }
 

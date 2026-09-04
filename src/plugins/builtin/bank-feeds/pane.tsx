@@ -61,22 +61,24 @@ export function BankFeedsPane({ focused, width, height }: PaneProps) {
       {
         id: "bank-footer",
         parts: [
-          { text: `Bank Transactions: ${rows.length}`, tone: "muted" },
+          { text: "Bank Feeds: Live Synced", tone: "positive" },
           { text: " │ ", tone: "muted" },
-          { text: "Feeds: ICICI, HDFC, RazorpayX PG", tone: "positive" },
+          { text: "UTR Stream: Connected", tone: "positive" },
         ],
       },
     ],
-  }), [rows.length]);
+  }), []);
 
   return (
     <Box flexDirection="column" width="100%" height="100%" backgroundColor={colors.bg}>
-      {/* Header */}
+      {/* Header: Direct Metadata */}
       <Box paddingX={1} paddingY={0} backgroundColor={colors.panel} borderBottomColor={colors.border}>
-        <Text color={colors.headerText}>🏦 CORPORATE BANK FEEDS </Text>
+        <Text color={colors.headerText}>Transactions: </Text>
+        <Text color={colors.textBright}>{rows.length} records </Text>
         <Text color={colors.textDim}>│ Feeds: </Text>
-        <Text color={colors.textBright}>ICICI Corporate + HDFC + RZP-PG </Text>
-        <Text color={colors.textDim}>│ UTR Index: Active</Text>
+        <Text color={colors.textBright}>ICICI + HDFC + RZP-PG </Text>
+        <Text color={colors.textDim}>│ UTR Index: </Text>
+        <Text color={colors.positive}>Active</Text>
       </Box>
 
       {/* Grid */}

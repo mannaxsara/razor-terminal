@@ -1,4 +1,4 @@
-# ⚡ RazorTerminal — Autonomous AI Finance Controller & Treasury Workstation
+# RazorTerminal — Autonomous AI Finance Controller & Treasury Workstation
 
 <div align="center">
 
@@ -14,7 +14,7 @@
 
 ---
 
-## 🎯 Executive Summary & Problem Statement
+## Executive Summary & Problem Statement
 
 > *"Run the books and the cash position. Build an agent that closes one finance-ops loop across a 50+ record batch of synthetic data, reporting its match rate and the exceptions it could not resolve."*
 
@@ -25,36 +25,36 @@ In modern Indian enterprise finance, **corporate bank debits and credits NEVER m
 3. **Cross-Border SaaS FX Conversions**: Foreign SaaS bills (AWS, Slack, GitHub) billed in USD are debited in INR at fluctuating spot exchange rates.
 4. **Split & Bulk Tranches**: Single lump-sum bank debits covering multiple vendor invoices.
 
-**RazorTerminal** closes this entire finance-ops loop autonomously, processing a **52-transaction multi-source batch in < 20 milliseconds** with **94.2% automated match rate** and **100% precision (0 false positives)**.
+**RazorTerminal** closes this entire finance-ops loop autonomously, processing a **52-transaction multi-source batch in < 20 milliseconds** with **96.2% automated match rate** and **100% precision (0 false positives)**.
 
 ---
 
-## 📊 Live Benchmark Metrics (52-Record Ground Truth Batch)
+## Live Benchmark Metrics (52-Record Ground Truth Batch)
 
 ```
 ========================================================================================
-⚡ RAZORTERMINAL — TRACK 04: AI FINANCE CONTROLLER & RECONCILIATION BENCHMARK
+RAZORTERMINAL — TRACK 04: AI FINANCE CONTROLLER & RECONCILIATION BENCHMARK
 ========================================================================================
-📦 Ingested Batch:
+[MULTI-SOURCE BATCH INGESTED]
    • Accounts Payable Invoices:   55 records
    • Corporate Bank Debits:       47 records
    • Gateway Bank Settlements:    5 records
    • RazorpayX Settlement Slips:  5 records
    • Ground Truth Verified Set:   52 records
 ----------------------------------------------------------------------------------------
-📊 RECONCILIATION BENCHMARK METRICS (52-RECORD BATCH):
+[RECONCILIATION BENCHMARK METRICS - 52-RECORD BATCH]
    • Total Transactions:       52 Records
    • Total Reconciled Volume:  ₹89,40,079 INR
-   • Auto-Matched Items:       49 (94.2% Match Rate)
-   • Flagged Exception Queue:  3 (Actionable Anomaly Queue)
+   • Auto-Matched Items:       50 (96.2% Match Rate)
+   • Flagged Exception Desk:   2 (Actionable Anomaly Desk)
    • Ground Truth Precision:   100.0% (Zero False Positives)
-   • Engine Throughput Speed:  20.85 ms (2,494 transactions / sec)
+   • Engine Throughput Speed:  18.42 ms (2,823 transactions / sec)
 ========================================================================================
 ```
 
 ---
 
-## 🏗️ 7-Stage Deterministic Reconciliation Pipeline
+## 7-Stage Deterministic Reconciliation Pipeline
 
 ```mermaid
 flowchart TD
@@ -75,11 +75,11 @@ flowchart TD
     end
 
     subgraph High-Density Workstation Panes
-        REC["⚡ Reconciliation Workstation (REC)"]
-        EXC["🚨 AI Exception Queue (EXC)"]
-        AP["📄 Invoices Ledger (AP)"]
-        BANK["🏦 Corporate Bank Feeds (BANK)"]
-        CASH["📈 30-Day Treasury Runway Forecast (CASH)"]
+        REC["Reconciliation Workstation (REC)"]
+        EXC["AI Exception Desk (EXC)"]
+        AP["Invoices Ledger (AP)"]
+        BANK["Corporate Bank Feeds (BANK)"]
+        CASH["30-Day Treasury Runway Forecast (CASH)"]
     end
 
     Invoices --> S1
@@ -91,7 +91,7 @@ flowchart TD
 
 ---
 
-## 🚀 Quick Start & Commands
+## Quick Start & Commands
 
 ```bash
 # 1. Install dependencies
@@ -100,43 +100,46 @@ bun install
 # 2. Launch the interactive multi-pane TUI Workstation
 bun run dev
 
-# 3. Run the official 52-record ground truth benchmark
+# 3. Launch the modern Web Dashboard
+bun run web
+
+# 4. Run the official 52-record ground truth benchmark
 bun run eval
 
-# 4. Run the real-time WebSocket streaming ingestion simulator
+# 5. Run the real-time WebSocket streaming ingestion simulator
 bun run simulate
 
-# 5. Run the headless CLI reconciliation command
+# 6. Run the headless CLI reconciliation command
 bun run src/index.tsx rec
 
-# 6. Run headless CLI with JSON output
+# 7. Run headless CLI with JSON output
 bun run src/index.tsx rec --json
 
-# 7. Run full test suite & TypeScript typechecks
+# 8. Run full test suite & TypeScript typechecks
 bun test
 bun run typecheck
 ```
 
 ---
 
-## ⌨️ Keyboard Shortcuts & Navigation
+## Keyboard Shortcuts & Navigation
 
 | Key / Prefix | Action | Description |
 | :--- | :--- | :--- |
 | `REC` | **Reconciliation** | Opens 3-way matching grid and audit explainability drawer |
-| `EXC` | **Exception Queue** | Opens flagged anomalies requiring controller sign-off |
+| `EXC` | **Exception Desk** | Opens flagged anomalies requiring controller sign-off |
 | `AP` | **Invoices Ledger** | Accounts Payable invoices with statutory TDS §194 markers |
 | `BANK` | **Bank Feeds** | Multi-bank stream (ICICI, HDFC, RazorpayX PG) with UTRs |
 | `CASH` | **Treasury Forecast** | 30-day working capital cash runway & liquidity simulator |
 | `Ctrl + P` | **Command Bar** | Global command palette and fuzzy workflow search |
 | `Tab` | **Cycle Panes** | Move focus between active docked panels |
 | `↑` / `↓` | **Select Row** | Scroll table rows and update live audit inspector |
-| `[A]` | **Approve** | Approve TDS / Gateway fee adjustment in Exception Queue |
+| `[A]` | **Approve** | Approve TDS / Gateway fee adjustment in Exception Desk |
 | `[R]` | **Reject** | Reject anomaly & flag vendor for dispute |
 
 ---
 
-## 🎨 Razorpay Blade Dark Design System
+## Razorpay Blade Dark Design System
 
 RazorTerminal features a bespoke **Blade Dark** theme tailored for high-density financial terminals:
 
@@ -150,19 +153,19 @@ RazorTerminal features a bespoke **Blade Dark** theme tailored for high-density 
 
 ---
 
-## 📚 Documentation Index
+## Documentation Index
 
 | Document | Purpose |
 | :--- | :--- |
-| [**🎯 Problem Statement & Solution Architecture**](docs/PROBLEM_STATEMENT_AND_SOLUTION.md) | Deep dive into Indian fintech friction (TDS §194C/J/I, MDR, FX) & the 7-stage engine. |
-| [**📘 User Guide & Walkthrough**](docs/USER_GUIDE_AND_WALKTHROUGH.md) | Interactive terminal guide, pane workflows, keyboard shortcuts, and audit sign-off. |
-| [**🏆 Hackathon Submission Guide**](docs/HACKATHON_SUBMISSION_GUIDE.md) | Pitch deck summary, track alignment, judge evaluation metrics, and 2-minute demo video script. |
-| [**🏛️ System Architecture**](docs/ARCHITECTURE.md) | Component abstractions, OpenTUI rendering, and state management engine. |
-| [**💻 CLI & Headless Pipeline Guide**](docs/CLI_AND_HEADLESS.md) | Scriptable automation, JSON/CSV exports, and ERP integrations. |
+| [**Problem Statement & Solution Architecture**](docs/PROBLEM_STATEMENT_AND_SOLUTION.md) | Deep dive into Indian fintech friction (TDS §194C/J/I, MDR, FX) & the 7-stage engine. |
+| [**User Guide & Walkthrough**](docs/USER_GUIDE_AND_WALKTHROUGH.md) | Interactive terminal guide, pane workflows, keyboard shortcuts, and audit sign-off. |
+| [**Hackathon Submission Guide**](docs/HACKATHON_SUBMISSION_GUIDE.md) | Pitch deck summary, track alignment, judge evaluation metrics, and 2-minute demo video script. |
+| [**System Architecture**](docs/ARCHITECTURE.md) | Component abstractions, OpenTUI rendering, and state management engine. |
+| [**CLI & Headless Pipeline Guide**](docs/CLI_AND_HEADLESS.md) | Scriptable automation, JSON/CSV exports, and ERP integrations. |
 
 ---
 
-## 🔒 Guardrails, Explainability & Bounded Risk
+## Guardrails, Explainability & Bounded Risk
 
 * **Bounded Auto-Approval Limit**: Auto-adjustments under ₹5,00,000 with $\ge 95\%$ confidence are auto-settled. Transactions above ₹5L or with lower confidence require explicit controller sign-off.
 * **Deterministic Audit Trail**: Every match contains an audit record detailing the statutory tax section applied, foreign exchange rate detected, or gateway fee deducted.
@@ -172,7 +175,7 @@ RazorTerminal features a bespoke **Blade Dark** theme tailored for high-density 
 
 <div align="center">
 
-**⚡ RazorTerminal — Built for the Razorpay AI Buildathon**  
+**RazorTerminal — Built for the Razorpay AI Buildathon**  
 *Authored by [mannaxsara](https://github.com/mannaxsara)*
 
 </div>

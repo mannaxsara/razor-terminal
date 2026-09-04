@@ -16,6 +16,7 @@ import { exceptionQueuePlugin } from "./builtin/exception-queue";
 import { treasuryForecastPlugin } from "./builtin/treasury-forecast";
 import { invoicesLedgerPlugin } from "./builtin/invoices-ledger";
 import { bankFeedsPlugin } from "./builtin/bank-feeds";
+import { settlementAgentPlugin } from "./builtin/settlement-agent";
 import {
   applicationPlugin,
   brokerPlugin,
@@ -28,6 +29,7 @@ import { tickerResearchPlugin } from "./builtin/ticker-research-plugin";
 export const uiBuiltinPlugins: GloomPlugin[] = [
   reconciliationPlugin,
   exceptionQueuePlugin,
+  settlementAgentPlugin,
   invoicesLedgerPlugin,
   bankFeedsPlugin,
   treasuryForecastPlugin,

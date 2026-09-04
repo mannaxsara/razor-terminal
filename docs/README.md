@@ -1,22 +1,22 @@
-# ⚡ RazorTerminal Documentation Suite
+# RazorTerminal Documentation Suite
 
 > **Official Documentation for Razorpay AI Buildathon (Track 04: AI Finance Controller & Track 03: Revenue Recovery)**  
 > **Autonomous AI Finance Controller & Treasury Workstation for RazorpayX**
 
 ---
 
-## 🏆 Hackathon & Solution Core Documents
+## Hackathon & Solution Core Documents
 
 | Document | Purpose | Key Topics |
 | :--- | :--- | :--- |
-| [**🏛️ Master System Architecture & Spec**](./SYSTEM_DOCUMENTATION_AND_ARCHITECTURE.md) | Full technical specification & architecture blueprint | Complete problem statement, 7-stage engine, UI panes, security guardrails, benchmark scorecard |
-| [**🎯 Problem Statement & Solution Architecture**](./PROBLEM_STATEMENT_AND_SOLUTION.md) | The core real-world finance friction & how we solved it | Multi-source reconciliation, Statutory TDS (§194C/J/I), Gateway MDR offsets, 7-stage engine, benchmark metrics |
-| [**📘 User Guide & Workstation Walkthrough**](./USER_GUIDE_AND_WALKTHROUGH.md) | How to run and interact with the workstation | Panes overview, keyboard shortcuts (`REC`, `EXC`, `AP`, `BANK`, `CASH`), audit trail inspection, exception resolution |
-| [**🏆 Hackathon Submission & Pitch Guide**](./HACKATHON_SUBMISSION_GUIDE.md) | Complete submission packet for judges | 2-minute elevator pitch, demo video script, track alignment breakdown, evaluation criteria |
+| [**Master System Architecture & Spec**](./SYSTEM_DOCUMENTATION_AND_ARCHITECTURE.md) | Full technical specification & architecture blueprint | Complete problem statement, 7-stage engine, UI panes, security guardrails, benchmark scorecard |
+| [**Problem Statement & Solution Architecture**](./PROBLEM_STATEMENT_AND_SOLUTION.md) | The core real-world finance friction & how we solved it | Multi-source reconciliation, Statutory TDS (§194C/J/I), Gateway MDR offsets, 7-stage engine, benchmark metrics |
+| [**User Guide & Workstation Walkthrough**](./USER_GUIDE_AND_WALKTHROUGH.md) | How to run and interact with the workstation | Panes overview, keyboard shortcuts (`REC`, `EXC`, `AP`, `BANK`, `CASH`), audit trail inspection, exception resolution |
+| [**Hackathon Submission & Pitch Guide**](./HACKATHON_SUBMISSION_GUIDE.md) | Complete submission packet for judges | 2-minute elevator pitch, demo video script, track alignment breakdown, evaluation criteria |
 
 ---
 
-## 🏛️ Architecture Decision Records (ADRs)
+## Architecture Decision Records (ADRs)
 
 | ADR | Title | Status | Summary |
 | :--- | :--- | :--- | :--- |
@@ -27,7 +27,7 @@
 
 ---
 
-## 📚 Technical Subsystem & Developer Guides
+## Technical Subsystem & Developer Guides
 
 | Document | Description | Key Topics |
 | :--- | :--- | :--- |
@@ -41,7 +41,7 @@
 
 ---
 
-## 🚀 Quick Launch
+## Quick Launch
 
 ```powershell
 # 1. Run the live interactive terminal workstation

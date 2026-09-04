@@ -1,11 +1,11 @@
-# ⚡ RazorTerminal — System Architecture & Complete Technical Specification
+# RazorTerminal — System Architecture & Complete Technical Specification
 
 > **Autonomous AI Finance Controller & Treasury Workstation for RazorpayX**  
 > **Official Documentation for Razorpay AI Buildathon (Track 04: AI Finance Controller & Track 03: Revenue Recovery)**
 
 ---
 
-## 📑 Table of Contents
+## Table of Contents
 
 1. [Executive Summary & Problem Statement](#1-executive-summary--problem-statement)
 2. [High-Level System Architecture](#2-high-level-system-architecture)
@@ -21,7 +21,7 @@
 
 ## 1. Executive Summary & Problem Statement
 
-### 🛑 The Problem
+### The Problem
 In modern Indian enterprise finance, **corporate bank debits and credits NEVER match invoice face values**. Finance teams spend hundreds of manual hours in spreadsheets trying to reconcile transactions because of four unavoidable frictions:
 
 1. **Statutory TDS Withholding (§194C, §194J, §194I)**: Indian tax law mandates withholding tax before paying vendors (**Section 194C = 2%**, **Section 194J = 10%**, **Section 194I = 10%**).
@@ -29,7 +29,7 @@ In modern Indian enterprise finance, **corporate bank debits and credits NEVER m
 3. **Cross-Border SaaS FX Conversions**: Foreign SaaS bills (AWS, Slack, GitHub) billed in USD are debited in INR at fluctuating spot exchange rates.
 4. **Split & Bulk Tranches**: Single lump-sum bank debits covering multiple vendor invoices or multi-milestone payments.
 
-### 💡 The Solution
+### The Solution
 **RazorTerminal** is an industrial-grade, Bloomberg-style terminal workstation that **autonomously closes the entire finance-ops loop across multi-source data batches in milliseconds**, achieving **96.2% automated match rate**, **100% precision (0 false positives)**, and a throughput of **> 2,500 transactions/second**.
 
 ---
@@ -38,13 +38,13 @@ In modern Indian enterprise finance, **corporate bank debits and credits NEVER m
 
 ```mermaid
 flowchart TD
-    subgraph Ingestion["📥 Multi-Source Data Ingestion"]
+    subgraph Ingestion["Multi-Source Data Ingestion"]
         AP["Accounts Payable Invoices (55)"]
         BANK["Corporate Bank Feeds (47)"]
         RZP["RazorpayX Settlement Slips (5)"]
     end
 
-    subgraph CoreEngine["⚡ 7-Stage Autonomous Engine"]
+    subgraph CoreEngine["7-Stage Autonomous Engine"]
         S1["Stage 1: Gateway MDR Net Match"]
         S2["Stage 2: Direct 100% Exact & UTR"]
         S3["Stage 3: Indian Statutory TDS (§194C/J/I)"]
@@ -55,15 +55,15 @@ flowchart TD
         S1 --> S2 --> S3 --> S4 --> S5 --> S6 --> S7
     end
 
-    subgraph Workstation["🖥️ OpenTUI Bloomberg Terminal"]
+    subgraph Workstation["OpenTUI Terminal Workstation"]
         REC["[REC] Reconciliation Grid"]
         EXC["[EXC] AI Exception Queue"]
         AP_PANE["[AP] Invoices Ledger"]
         BANK_PANE["[BANK] Corporate Feeds"]
-        CASH_PANE["[CASH] Treasury Runway Forecast"]
+        CSH["[CASH] Treasury Runway Forecast"]
     end
 
-    subgraph Output["📤 Headless CLI & Export"]
+    subgraph Output["Headless CLI & Export"]
         CLI["CLI Formatter"]
         JSON["JSON / CSV Audit Export"]
     end
@@ -163,7 +163,7 @@ Tested against the official 52-record ground truth benchmark (`benchmark/run-eva
 
 ```
 ========================================================================================
-📊 RECONCILIATION BENCHMARK METRICS (52-RECORD BATCH):
+RECONCILIATION BENCHMARK METRICS (52-RECORD BATCH):
    • Total Ingested Transactions: 52 Records
    • Total Reconciled Volume:     ₹89,40,079 INR
    • Auto-Matched Transactions:   50 (96.2% Match Rate)

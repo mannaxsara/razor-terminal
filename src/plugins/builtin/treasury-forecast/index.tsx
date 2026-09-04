@@ -16,7 +16,7 @@ export const treasuryForecastPlugin: GloomPlugin = {
     ctx.registerPane({
       id: "treasury-forecast",
       name: "Treasury Forecast",
-      icon: "📈",
+      icon: "T",
       component: TreasuryForecastPane,
       defaultPosition: "right",
       defaultMode: "floating",

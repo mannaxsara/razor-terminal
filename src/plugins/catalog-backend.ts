@@ -26,11 +26,13 @@ import { exceptionQueuePlugin } from "./builtin/exception-queue";
 import { treasuryForecastPlugin } from "./builtin/treasury-forecast";
 import { invoicesLedgerPlugin } from "./builtin/invoices-ledger";
 import { bankFeedsPlugin } from "./builtin/bank-feeds";
+import { settlementAgentPlugin } from "./builtin/settlement-agent";
 
 const desktopBackendPlugins: GloomPlugin[] = [
   yahooPlugin,
   reconciliationPlugin,
   exceptionQueuePlugin,
+  settlementAgentPlugin,
   invoicesLedgerPlugin,
   bankFeedsPlugin,
   treasuryForecastPlugin,

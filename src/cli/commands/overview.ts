@@ -150,7 +150,7 @@ async function runEcon(args: string[], ctx: Parameters<CliCommandDef["execute"]>
 }
 
 async function runFred(args: string[], ctx: Parameters<CliCommandDef["execute"]>[1]) {
-  const seriesId = requireArg(args[0]?.toUpperCase(), "Usage: gloomberb fred <series-id>", ctx);
+  const seriesId = requireArg(args[0]?.toUpperCase(), "Usage: razor-terminal fred <series-id>", ctx);
   const startDate = takeOption(args, "--start") ?? "2021-01-01";
   const sortOrder = (takeOption(args, "--sort") ?? "desc") as "asc" | "desc";
   const data = await apiClient.getCloudFredSeries(seriesId, { startDate, sortOrder });
@@ -175,8 +175,8 @@ async function runYieldCurve(args: string[], ctx: Parameters<CliCommandDef["exec
 }
 
 async function runCorrelation(args: string[], ctx: Parameters<CliCommandDef["execute"]>[1]) {
-  const left = requireArg(args[0]?.toUpperCase(), "Usage: gloomberb correlation <symbol-a> <symbol-b>", ctx);
-  const right = requireArg(args[1]?.toUpperCase(), "Usage: gloomberb correlation <symbol-a> <symbol-b>", ctx);
+  const left = requireArg(args[0]?.toUpperCase(), "Usage: razor-terminal correlation <symbol-a> <symbol-b>", ctx);
+  const right = requireArg(args[1]?.toUpperCase(), "Usage: razor-terminal correlation <symbol-a> <symbol-b>", ctx);
   await withCliServices(ctx, async (services) => {
     const [leftHistory, rightHistory] = await Promise.all([
       services.dataProvider.getPriceHistory(left, "", "1Y"),

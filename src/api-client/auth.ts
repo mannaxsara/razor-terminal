@@ -63,7 +63,7 @@ export class CloudAuthApi {
       body: JSON.stringify({ email, username, name, password }),
     });
     this.options.requireCapturedSession(
-      "Account created, but Gloomberb could not save the login session. Please try logging in again.",
+      "Account created, but RazorTerminal could not save the login session. Please try logging in again.",
     );
     this.options.setCurrentUser(result.user);
     return result.user;
@@ -75,7 +75,7 @@ export class CloudAuthApi {
       body: JSON.stringify({ email, password }),
     });
     this.options.requireCapturedSession(
-      "Logged in, but Gloomberb could not save the login session. Please try again.",
+      "Logged in, but RazorTerminal could not save the login session. Please try again.",
     );
     this.options.setCurrentUser(result.user);
     return result.user;

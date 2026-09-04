@@ -215,7 +215,7 @@ export const DEFAULT_PORTFOLIO_COLUMN_IDS = [
   "pnl_pct",
 ];
 
-const DEFAULT_HOME_LAYOUT: LayoutConfig = {
+export const DEFAULT_HOME_LAYOUT: LayoutConfig = {
   dockRoot: {
     kind: "split",
     axis: "horizontal",
@@ -268,23 +268,50 @@ export const DEFAULT_FINANCE_LAYOUT: LayoutConfig = {
   dockRoot: {
     kind: "split",
     axis: "vertical",
-    ratio: 0.72,
+    ratio: 0.55,
     first: {
       kind: "split",
       axis: "horizontal",
-      ratio: 0.32,
+      ratio: 0.38,
+      first: { kind: "pane", instanceId: "reconciliation:main" },
+      second: {
+        kind: "split",
+        axis: "horizontal",
+        ratio: 0.50,
+        first: { kind: "pane", instanceId: "exception-queue:main" },
+        second: { kind: "pane", instanceId: "settlement-agent:main" },
+      },
+    },
+    second: {
+      kind: "split",
+      axis: "horizontal",
+      ratio: 0.34,
       first: { kind: "pane", instanceId: "invoices-ledger:main" },
       second: {
         kind: "split",
         axis: "horizontal",
         ratio: 0.50,
         first: { kind: "pane", instanceId: "bank-feeds:main" },
-        second: { kind: "pane", instanceId: "reconciliation:main" },
+        second: { kind: "pane", instanceId: "treasury-forecast:main" },
       },
     },
-    second: { kind: "pane", instanceId: "treasury-forecast:main" },
   },
   instances: [
+    {
+      instanceId: "reconciliation:main",
+      paneId: "reconciliation",
+      binding: { kind: "none" },
+    },
+    {
+      instanceId: "exception-queue:main",
+      paneId: "exception-queue",
+      binding: { kind: "none" },
+    },
+    {
+      instanceId: "settlement-agent:main",
+      paneId: "settlement-agent",
+      binding: { kind: "none" },
+    },
     {
       instanceId: "invoices-ledger:main",
       paneId: "invoices-ledger",
@@ -293,11 +320,6 @@ export const DEFAULT_FINANCE_LAYOUT: LayoutConfig = {
     {
       instanceId: "bank-feeds:main",
       paneId: "bank-feeds",
-      binding: { kind: "none" },
-    },
-    {
-      instanceId: "reconciliation:main",
-      paneId: "reconciliation",
       binding: { kind: "none" },
     },
     {
@@ -310,47 +332,23 @@ export const DEFAULT_FINANCE_LAYOUT: LayoutConfig = {
   detached: [],
 };
 
-
-
-const DEFAULT_MONITOR_LAYOUT: LayoutConfig = {
+export const DEFAULT_TREASURY_LAYOUT: LayoutConfig = {
   dockRoot: {
     kind: "split",
     axis: "vertical",
-    ratio: 0.48,
-    first: {
-      kind: "split",
-      axis: "horizontal",
-      ratio: 0.42,
-      first: { kind: "pane", instanceId: "news-top:main" },
-      second: { kind: "pane", instanceId: "prediction-markets:main" },
-    },
-    second: {
-      kind: "split",
-      axis: "horizontal",
-      ratio: 0.42,
-      first: { kind: "pane", instanceId: "world-indices:main" },
-      second: { kind: "pane", instanceId: "econ-calendar:main" },
-    },
+    ratio: 0.50,
+    first: { kind: "pane", instanceId: "treasury-forecast:main" },
+    second: { kind: "pane", instanceId: "bank-feeds:main" },
   },
   instances: [
     {
-      instanceId: "news-top:main",
-      paneId: "news-top",
+      instanceId: "treasury-forecast:main",
+      paneId: "treasury-forecast",
       binding: { kind: "none" },
     },
     {
-      instanceId: "prediction-markets:main",
-      paneId: "prediction-markets",
-      binding: { kind: "none" },
-    },
-    {
-      instanceId: "world-indices:main",
-      paneId: "world-indices",
-      binding: { kind: "none" },
-    },
-    {
-      instanceId: "econ-calendar:main",
-      paneId: "econ-calendar",
+      instanceId: "bank-feeds:main",
+      paneId: "bank-feeds",
       binding: { kind: "none" },
     },
   ],
@@ -358,7 +356,54 @@ const DEFAULT_MONITOR_LAYOUT: LayoutConfig = {
   detached: [],
 };
 
-export const DEFAULT_LAYOUT = DEFAULT_HOME_LAYOUT;
+export const DEFAULT_AUDIT_LAYOUT: LayoutConfig = {
+  dockRoot: {
+    kind: "split",
+    axis: "vertical",
+    ratio: 0.50,
+    first: {
+      kind: "split",
+      axis: "horizontal",
+      ratio: 0.50,
+      first: { kind: "pane", instanceId: "exception-queue:main" },
+      second: { kind: "pane", instanceId: "settlement-agent:main" },
+    },
+    second: {
+      kind: "split",
+      axis: "horizontal",
+      ratio: 0.50,
+      first: { kind: "pane", instanceId: "reconciliation:main" },
+      second: { kind: "pane", instanceId: "invoices-ledger:main" },
+    },
+  },
+  instances: [
+    {
+      instanceId: "exception-queue:main",
+      paneId: "exception-queue",
+      binding: { kind: "none" },
+    },
+    {
+      instanceId: "settlement-agent:main",
+      paneId: "settlement-agent",
+      binding: { kind: "none" },
+    },
+    {
+      instanceId: "reconciliation:main",
+      paneId: "reconciliation",
+      binding: { kind: "none" },
+    },
+    {
+      instanceId: "invoices-ledger:main",
+      paneId: "invoices-ledger",
+      binding: { kind: "none" },
+    },
+  ],
+  floating: [],
+  detached: [],
+};
+
+
+export const DEFAULT_LAYOUT = DEFAULT_FINANCE_LAYOUT;
 const BLANK_LAYOUT: LayoutConfig = {
   dockRoot: null,
   instances: [],
@@ -689,23 +734,36 @@ export function findPaneInstance(layout: LayoutConfig, instanceId: string): Pane
 }
 
 export function createDefaultConfig(dataDir: string): AppConfig {
-  const layout = cloneLayout(DEFAULT_HOME_LAYOUT);
+  const layout = cloneLayout(DEFAULT_FINANCE_LAYOUT);
   return {
     dataDir,
     configVersion: CURRENT_CONFIG_VERSION,
-    baseCurrency: "USD",
+    baseCurrency: "INR",
     refreshIntervalMinutes: 30,
-    portfolios: [{ id: "main", name: "Main Portfolio", currency: "USD" }],
+    portfolios: [{ id: "main", name: "Corporate Treasury", currency: "INR" }],
     watchlists: [{ id: "watchlist", name: "Watchlist" }],
     layout,
     layouts: [
-      { name: "Home", layout: cloneLayout(layout), paneState: {} },
       { name: "Controller", layout: cloneLayout(DEFAULT_FINANCE_LAYOUT), paneState: {} },
-      { name: "Monitor", layout: cloneLayout(DEFAULT_MONITOR_LAYOUT), paneState: {} },
+      { name: "Treasury", layout: cloneLayout(DEFAULT_TREASURY_LAYOUT), paneState: {} },
+      { name: "Audit Desk", layout: cloneLayout(DEFAULT_AUDIT_LAYOUT), paneState: {} },
     ],
     activeLayoutIndex: 0,
     brokerInstances: [],
-    disabledPlugins: [],
+    disabledPlugins: [
+      "gloomberb-cloud",
+      "prediction-markets",
+      "polls",
+      "ibkr",
+      "robinhood",
+      "public",
+      "simplefin",
+      "news",
+      "substack",
+      "macro",
+      "market-overview",
+      "alerts",
+    ],
     disabledSources: [],
     pluginConfig: {},
     theme: "razorpay",
@@ -715,6 +773,7 @@ export function createDefaultConfig(dataDir: string): AppConfig {
     valueFlashingEnabled: true,
     fontSize: 12,
     recentTickers: [],
+    onboardingComplete: true,
   };
 }
 

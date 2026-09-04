@@ -34,7 +34,7 @@ const c = {
 export async function runLiveStreamSimulator() {
   console.clear();
   console.log(`${c.blue}${c.bold}========================================================================================${c.reset}`);
-  console.log(`${c.blue}${c.bold}⚡ RAZORTERMINAL — REAL-TIME FINANCE-OPS & LIVE RECONCILIATION STREAM${c.reset}`);
+  console.log(`${c.blue}${c.bold}RAZORTERMINAL — REAL-TIME FINANCE-OPS & LIVE RECONCILIATION STREAM${c.reset}`);
   console.log(`${c.dim}Simulating real-time WebSocket feeds from ICICI Corporate, HDFC, and RazorpayX Gateway...${c.reset}`);
   console.log(`${c.blue}${c.bold}========================================================================================${c.reset}\n`);
 
@@ -77,11 +77,11 @@ export async function runLiveStreamSimulator() {
 
       console.log(
         `${c.dim}[${timestamp}]${c.reset} ` +
-        `${c.green}✔ RECONCILED${c.reset} ` +
+        `${c.green}[RECONCILED]${c.reset} ` +
         `${c.white}${tx.id.padEnd(16)}${c.reset} ` +
         `${c.bold}₹${tx.amount.toLocaleString("en-IN").padStart(10)}${c.reset} ` +
         `${tagColor}[${match.category.padEnd(18)}]${c.reset} ` +
-        `──▶ ${c.blue}${match.invoiceIds.join(", ") || match.settlementId}${c.reset} ` +
+        `--> ${c.blue}${match.invoiceIds.join(", ") || match.settlementId}${c.reset} ` +
         `${c.dim}(${latency}ms)${c.reset}`
       );
       console.log(`    ${c.dim}└─ Audit: ${match.explanation}${c.reset}`);
@@ -89,11 +89,11 @@ export async function runLiveStreamSimulator() {
       exceptionCount++;
       console.log(
         `${c.dim}[${timestamp}]${c.reset} ` +
-        `${c.red}✖ EXCEPTION${c.reset}  ` +
+        `${c.red}[EXCEPTION] ${c.reset} ` +
         `${c.white}${tx.id.padEnd(16)}${c.reset} ` +
         `${c.bold}₹${tx.amount.toLocaleString("en-IN").padStart(10)}${c.reset} ` +
         `${c.red}[${exc.category.padEnd(18)}]${c.reset} ` +
-        `──▶ ${c.yellow}${exc.suggestedAction}${c.reset} ` +
+        `--> ${c.yellow}${exc.suggestedAction}${c.reset} ` +
         `${c.dim}(${latency}ms)${c.reset}`
       );
       console.log(`    ${c.dim}└─ Diagnosis: ${exc.explanation}${c.reset}`);
@@ -103,7 +103,7 @@ export async function runLiveStreamSimulator() {
   }
 
   console.log(`\n${c.blue}${c.bold}----------------------------------------------------------------------------------------${c.reset}`);
-  console.log(`${c.bold}📊 STREAMING TELEMETRY SUMMARY:${c.reset}`);
+  console.log(`${c.bold}[STREAMING TELEMETRY SUMMARY]${c.reset}`);
   console.log(`   • Ingested Events:      ${processedCount} transactions`);
   console.log(`   • Reconciled Volume:    ₹${totalVolume.toLocaleString("en-IN")} INR`);
   console.log(`   • Live Match Rate:      ${((matchedCount / processedCount) * 100).toFixed(1)}% (${matchedCount}/${processedCount})`);

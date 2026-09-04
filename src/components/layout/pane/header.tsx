@@ -134,7 +134,7 @@ export function PaneHeader({
   const backgroundColor = floating ? floatingPaneTitleBg(visuallyFocused) : paneTitleBg(visuallyFocused);
   const actionText = showActions ? PANE_HEADER_ACTION : "     ";
   const closeText = floating ? PANE_HEADER_CLOSE : "";
-  const terminalQuickSettingsWidth = quickSettings.reduce((total) => total + displayWidth(" ⚡ "), 0);
+  const terminalQuickSettingsWidth = quickSettings.reduce((total) => total + displayWidth(" * "), 0);
   const textColor = paneTitleText(visuallyFocused, floating);
   const handleTerminalHeaderMouseDown = useCallback((event: any) => {
     capturePointerDrag(nativeRenderer, terminalHeaderRef.current);
@@ -265,7 +265,7 @@ export function PaneHeader({
         {quickSettings.map((setting) => (
           <TerminalPaneButton
             key={setting.key}
-            text=" ⚡ "
+            text=" * "
             fg={setting.active ? colors.warning : colors.textDim}
             role="pane-quick-setting"
             onMouseDown={setting.onMouseDown}
@@ -313,7 +313,7 @@ export function PaneHeader({
       {quickSettings.map((setting) => (
         <TerminalPaneButton
           key={setting.key}
-          text=" ⚡ "
+          text=" * "
           fg={setting.active ? colors.warning : colors.textDim}
           role="pane-quick-setting"
           onMouseDown={setting.onMouseDown}

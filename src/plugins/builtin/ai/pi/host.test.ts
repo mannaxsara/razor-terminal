@@ -130,7 +130,7 @@ describe("Pi AI host screener mode", () => {
         expect(toolDefinition).not.toContain("gloomberb_remote");
         expect(toolDefinition).not.toContain("app.openCommandBar");
         expect(toolDefinition).not.toContain('"call"');
-        expect(context.systemPrompt).toContain("Never operate, navigate, alter, or type into the Gloomberb UI");
+        expect(context.systemPrompt).toContain("Never operate, navigate, alter, or type into the RazorTerminal UI");
         return fauxAssistantMessage(fauxToolCall("gloomberb_market_data", {
           operation: "quote",
           symbol: "nvda",
@@ -215,7 +215,7 @@ describe("Pi AI host catalog and account connection", () => {
       canDisconnect: false,
     });
     await expect(host.connect!("google")).rejects.toThrow("API key in the environment or Pi credential store");
-    await expect(host.disconnect!("google")).rejects.toThrow("managed outside Gloomberb");
+    await expect(host.disconnect!("google")).rejects.toThrow("managed outside RazorTerminal");
     expect(loginCalls).toBe(0);
     expect(logoutCalls).toBe(0);
 

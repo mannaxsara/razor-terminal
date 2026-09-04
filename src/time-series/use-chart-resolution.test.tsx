@@ -1,4 +1,4 @@
-import { afterEach, describe, expect, test } from "bun:test";
+import { afterEach, beforeEach, describe, expect, test } from "bun:test";
 import { act, useState } from "react";
 import { testRender } from "../renderers/opentui/test-utils";
 import { createTestDataProvider } from "../test-support/data-provider";
@@ -150,6 +150,14 @@ async function waitFor(predicate: () => boolean): Promise<void> {
   }
   throw new Error("Timed out waiting for chart resolution.");
 }
+
+beforeEach(() => {
+  setAutoViewport = null;
+  setRequestViewport = null;
+  setChartSpec = null;
+  latestResult = null;
+  setSharedMarketDataCoordinator(null);
+});
 
 afterEach(async () => {
   if (testSetup) {

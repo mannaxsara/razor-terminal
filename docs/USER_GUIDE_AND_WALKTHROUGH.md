@@ -1,10 +1,10 @@
-# 📘 RazorTerminal — User Guide & Workstation Walkthrough
+# RazorTerminal — User Guide & Workstation Walkthrough
 
 > **Interactive Terminal & GUI Guide for Finance Controllers and Reviewers**
 
 ---
 
-## 🚀 1. How to Launch
+## 1. How to Launch
 
 In your terminal or PowerShell:
 
@@ -15,13 +15,13 @@ bun run dev
 
 ---
 
-## 🖥️ 2. Workstation Panes Overview
+## 2. Workstation Panes Overview
 
 RazorTerminal boots directly into a 4-pane **Finance Controller Layout**:
 
 ```
 ┌──────────────────────────┬──────────────────────────┬─────────────────────────────────────────────────────────┐
-│ 📄 Invoices Ledger (AP)  │ 🏦 Corporate Bank Feeds  │ ⚡ Reconciliation Workstation                           │
+│ Invoices Ledger (AP)     │ Corporate Bank Feeds     │ Reconciliation Workstation                              │
 │ (Left Column)            │ (Center Column)          │ (Right Column)                                          │
 │                          │                          │                                                         │
 │ Shows all 55 Accounts    │ Live corporate bank      │ The heart of the AI Engine:                             │
@@ -29,14 +29,14 @@ RazorTerminal boots directly into a 4-pane **Finance Controller Layout**:
 │ with statutory TDS       │ HDFC, RazorpayX PG) with │ displays match confidence, and shows the explainable    │
 │ deductions (§194C/J/I).  │ UTR reference codes.     │ audit drawer with tax / FX / fee breakdowns.            │
 ├──────────────────────────┴──────────────────────────┴─────────────────────────────────────────────────────────┤
-│ 📈 Treasury Liquidity & 30-Day Cash Runway Forecast (Bottom Row)                                              │
+│ Treasury Liquidity & 30-Day Cash Runway Forecast (Bottom Row)                                                 │
 │ Real-time working capital telemetry: Net Runway (18.4 Mos), Total Liquidity (₹1.48 Cr), Reconciled (₹89.4L)    │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ---
 
-## ⌨️ 3. Navigation & Interactive Controls
+## 3. Navigation & Interactive Controls
 
 | Key / Mouse Action | What It Does |
 | :--- | :--- |
@@ -52,7 +52,7 @@ RazorTerminal boots directly into a 4-pane **Finance Controller Layout**:
 
 ---
 
-## 🔎 4. Inspecting Reconciliation Audits
+## 4. Inspecting Reconciliation Audits
 
 When focused on the **Reconciliation Workstation (`REC`)**, selecting any transaction displays its **Audit Log Drawer** at the bottom of the pane:
 
@@ -74,7 +74,7 @@ When focused on the **Reconciliation Workstation (`REC`)**, selecting any transa
 
 ---
 
-## 🚨 5. How to Handle the AI Exception Queue
+## 5. How to Handle the AI Exception Queue
 
 Switch to the **AI Exception Queue (`EXC`)** to triage flagged discrepancies:
 
@@ -87,7 +87,7 @@ Switch to the **AI Exception Queue (`EXC`)** to triage flagged discrepancies:
 
 ---
 
-## 📊 6. Running the Benchmark Evaluation Suite
+## 6. Running the Benchmark Evaluation Suite
 
 To test the reconciliation engine against the complete 52-record ground truth dataset:
 
@@ -97,7 +97,7 @@ bun run eval
 
 Output metrics include:
 * Total Processed Volume (₹89,40,079)
-* Autonomous Match Rate (94.2%)
-* Actionable Anomaly Queue (3 items)
+* Autonomous Match Rate (96.2%)
+* Actionable Anomaly Queue (2 items)
 * Ground Truth Precision (100.0% — zero false positives)
-* Engine Throughput Speed (20.58 ms)
+* Engine Throughput Speed (< 25 ms)

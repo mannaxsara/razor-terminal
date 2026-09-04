@@ -69,11 +69,11 @@ export const reconciliationCliCommand: CliCommandDef = {
     }
 
     // High-Density Formatted Terminal Output
-    console.log(renderSection("⚡ RAZORPAYX AUTONOMOUS RECONCILIATION BENCHMARK"));
+    console.log(renderSection("RAZORPAYX AUTONOMOUS RECONCILIATION BENCHMARK"));
     console.log(renderStat("Total Processed Volume", `₹${results.totalVolumeINR.toLocaleString("en-IN")}`));
     console.log(renderStat("Ingested Batch", `${results.totalTransactionsProcessed} Transactions (${SYNTHETIC_INVOICES.length} Invoices + 52 Bank/PG Records)`));
     console.log(renderStat("Autonomous Match Rate", `${results.matchRatePercent.toFixed(1)}% (${results.matchedCount}/${results.totalTransactionsProcessed})`));
-    console.log(renderStat("Actionable Exception Queue", `${results.exceptionCount} Flagged Anomalies`));
+    console.log(renderStat("Actionable Exception Desk", `${results.exceptionCount} Flagged Anomalies`));
     console.log(renderStat("Ground Truth Precision", "100.0% (Zero False Positives)"));
     console.log("");
 
@@ -109,7 +109,7 @@ export const reconciliationCliCommand: CliCommandDef = {
     }
 
     if (results.exceptions.length > 0) {
-      console.log(cliStyles.bold("🚨 AI Exception & Anomaly Queue (Requires Human-in-the-Loop Sign-Off):"));
+      console.log(cliStyles.bold("AI Exception & Anomaly Desk (Requires Human-in-the-Loop Sign-Off):"));
       const excColumns: CliTableColumn[] = [
         { header: "Txn ID", align: "left" },
         { header: "Bank", align: "left" },

@@ -42,3 +42,7 @@ src-tauri/gen
 
 .codex/
 paseo.json
+
+# Agent scratch & workspaces
+.agents/*
+!.agents/skills/

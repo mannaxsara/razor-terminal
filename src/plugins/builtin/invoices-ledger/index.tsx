@@ -16,7 +16,7 @@ export const invoicesLedgerPlugin: GloomPlugin = {
     ctx.registerPane({
       id: "invoices-ledger",
       name: "Invoices Ledger",
-      icon: "📄",
+      icon: "I",
       component: InvoicesLedgerPane,
       defaultPosition: "left",
       defaultMode: "floating",

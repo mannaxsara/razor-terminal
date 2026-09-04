@@ -16,7 +16,7 @@ export const reconciliationPlugin: GloomPlugin = {
     ctx.registerPane({
       id: "reconciliation",
       name: "Reconciliation",
-      icon: "⚡",
+      icon: "R",
       component: ReconciliationPane,
       defaultPosition: "right",
       defaultMode: "floating",

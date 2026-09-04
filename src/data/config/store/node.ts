@@ -37,7 +37,13 @@ export async function getDataDir(): Promise<string | null> {
     const config = JSON.parse(raw) as { dataDir?: string };
     return config.dataDir || join(getHomeDir(), ".razor-terminal");
   } catch {
-    return join(getHomeDir(), ".razor-terminal");
+    try {
+      const legacyRaw = await readFile(join(getHomeDir(), ".gloomberb", "config.json"), "utf-8");
+      const legacyConfig = JSON.parse(legacyRaw) as { dataDir?: string };
+      return legacyConfig.dataDir || join(getHomeDir(), ".razor-terminal");
+    } catch {
+      return join(getHomeDir(), ".razor-terminal");
+    }
   }
 }
 

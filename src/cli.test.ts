@@ -44,8 +44,8 @@ async function createCliFixture({
   const dataDir = await createTempDir("gloomberb-cli-data-");
   process.env.HOME = homeDir;
 
-  await mkdir(join(homeDir, ".gloomberb"), { recursive: true });
-  await writeFile(join(homeDir, ".gloomberb", "config.json"), JSON.stringify({ dataDir }), "utf-8");
+  await mkdir(join(homeDir, ".razor-terminal"), { recursive: true });
+  await writeFile(join(homeDir, ".razor-terminal", "config.json"), JSON.stringify({ dataDir }), "utf-8");
 
   const config = createDefaultConfig(dataDir);
   if (baseCurrency) {
@@ -150,7 +150,7 @@ describe("CLI watchlist commands", () => {
     expect(result).toBe(true);
     expect(stdout).toContain("predictions [...]");
     expect(stdout).toContain("Prediction Launch");
-    expect(stdout).toContain("gloomberb predictions world");
+    expect(stdout).toContain("razor-terminal predictions world");
     expect(stdout).toContain("Portfolio Actions");
     expect(stdout).toContain("Watchlist Actions");
   });

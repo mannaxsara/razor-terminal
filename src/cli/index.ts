@@ -98,7 +98,7 @@ function createCoreCliCommands(
       execute: async (args, ctx) => {
         const symbol = args[0];
         if (!symbol) {
-          ctx.fail("Usage: gloomberb ticker <symbol>");
+          ctx.fail("Usage: razor-terminal ticker <symbol>");
         }
         await ticker(symbol!, {
           initMarketData: ctx.initMarketData,
@@ -149,7 +149,7 @@ function createCoreCliCommands(
       execute: async (args) => {
         const ref = args[0];
         if (!ref) {
-          fail("Usage: gloomberb install <github-user/repo>");
+          fail("Usage: razor-terminal install <github-user/repo>");
         }
         await installPlugin(ref);
       },
@@ -164,7 +164,7 @@ function createCoreCliCommands(
       execute: async (args) => {
         const name = args[0];
         if (!name) {
-          fail("Usage: gloomberb remove <plugin-name>");
+          fail("Usage: razor-terminal remove <plugin-name>");
         }
         await removePlugin(name);
       },

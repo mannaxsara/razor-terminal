@@ -86,7 +86,7 @@ async function buildShotPage(outdir: string, payload: DesktopPaneShotPayload): P
     ],
     failureMessage: "Failed to build desktop pane screenshot renderer.",
     missingEntryMessage: "Desktop pane screenshot build did not produce a JavaScript entrypoint.",
-    title: "Gloomberb Pane Shot",
+    title: "RazorTerminal Pane Shot",
     loadingText: "Rendering pane...",
     bootstrapScript: `
       window.__GLOOM_CLI_SHOT_PAYLOAD__ = ${payloadJson};

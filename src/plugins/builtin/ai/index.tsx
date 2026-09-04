@@ -133,8 +133,8 @@ function accountSettingRows(providerIds: ReadonlySet<string>): AiAccountSettingR
               ));
               context.notify({
                 body: remainingAccount?.connectionState === "connected"
-                  ? `${account.providerLabel}'s Gloomberb account was removed. ${remainingAccount.connectionLabel} remains active.`
-                  : `${account.providerLabel} is disconnected from Gloomberb.`,
+                  ? `${account.providerLabel}'s RazorTerminal account was removed. ${remainingAccount.connectionLabel} remains active.`
+                  : `${account.providerLabel} is disconnected from RazorTerminal.`,
                 type: "success",
               });
             } catch (error) {

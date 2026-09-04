@@ -106,10 +106,10 @@ function renderHelpSections(registry: CliCommandRegistry): string[] {
 
 export function renderCliHelp(registry: CliCommandRegistry, version: string): string {
   const lines = [
-    `${cliStyles.bold(`gloomberb v${version}`)}\n${cliStyles.muted("Market research and portfolio tracker for the terminal")}`,
+    `${cliStyles.bold(`RazorTerminal v${version}`)}\n${cliStyles.muted("AI Finance Controller & Multi-Source Treasury Workstation")}`,
     "",
     renderSection("Usage"),
-    "gloomberb [command]",
+    "razor-terminal [command]",
     "",
     renderSection("Commands"),
     renderTable(

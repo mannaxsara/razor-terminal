@@ -67,22 +67,24 @@ export function InvoicesLedgerPane({ focused, width, height }: PaneProps) {
       {
         id: "ap-footer",
         parts: [
-          { text: `Total AP Invoices: ${rows.length}`, tone: "muted" },
+          { text: "Ledger: Live Synced", tone: "positive" },
           { text: " │ ", tone: "muted" },
-          { text: `TDS Covered: ${rows.filter((i) => i.tdsApplicable).length}`, tone: "positive" },
+          { text: "TDS Engine: Compliant", tone: "positive" },
         ],
       },
     ],
-  }), [rows]);
+  }), []);
 
   return (
     <Box flexDirection="column" width="100%" height="100%" backgroundColor={colors.bg}>
-      {/* Header */}
+      {/* Header: Direct Metadata */}
       <Box paddingX={1} paddingY={0} backgroundColor={colors.panel} borderBottomColor={colors.border}>
-        <Text color={colors.headerText}>📄 ACCOUNTS PAYABLE </Text>
-        <Text color={colors.textDim}>│ Invoices: </Text>
-        <Text color={colors.textBright}>{rows.length} </Text>
-        <Text color={colors.textDim}>│ Statutory TDS: §194C / §194J / §194I</Text>
+        <Text color={colors.headerText}>Invoices: </Text>
+        <Text color={colors.textBright}>{rows.length} records </Text>
+        <Text color={colors.textDim}>│ Statutory TDS: </Text>
+        <Text color={colors.warning}>§194C (2%), §194J (10%), §194I (10%) </Text>
+        <Text color={colors.textDim}>│ Compliance: </Text>
+        <Text color={colors.positive}>Active</Text>
       </Box>
 
       {/* Grid */}

@@ -16,7 +16,7 @@ export const bankFeedsPlugin: GloomPlugin = {
     ctx.registerPane({
       id: "bank-feeds",
       name: "Bank Feeds",
-      icon: "🏦",
+      icon: "B",
       component: BankFeedsPane,
       defaultPosition: "left",
       defaultMode: "floating",

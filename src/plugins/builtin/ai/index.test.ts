@@ -164,7 +164,7 @@ describe("AI plugin shared provider settings", () => {
     expect(disconnectCalls).toEqual(["anthropic"]);
     expect(getAiRuntimeCatalog()).toEqual(disconnectedCatalog);
     expect(notifications.at(-1)).toMatchObject({
-      body: "Claude is disconnected from Gloomberb.",
+      body: "Claude is disconnected from RazorTerminal.",
       type: "success",
     });
     expect(notifications.at(-1)?.body).not.toContain("fallback");

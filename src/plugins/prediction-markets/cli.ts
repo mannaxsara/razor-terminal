@@ -14,7 +14,7 @@ export const predictionMarketsCliCommand: CliCommandDef = {
         { header: "Example" },
       ],
       rows: [
-        ["gloomberb predictions [venue] [category] [browse-tab] [search...]", "gloomberb predictions world"],
+        ["razor-terminal predictions [venue] [category] [browse-tab] [search...]", "razor-terminal predictions world"],
         ["venue", "all | polymarket | kalshi"],
         ["category", "all | politics | world | macro | crypto | science | sports | entertainment | climate | social"],
         ["browse-tab", "top | ending | new | watchlist"],

@@ -22,7 +22,59 @@ export interface Command {
 }
 
 export const commands: Command[] = [
-  // Security description
+  // Finance Controller commands
+  {
+    id: "reconciliation",
+    prefix: "REC",
+    label: "Batch Reconciliation",
+    description: "Open 52-record multi-source reconciliation batch",
+    category: "Reconciliation",
+  },
+  {
+    id: "exception-queue",
+    prefix: "EXC",
+    label: "Honest Exception Desk",
+    description: "Open actionable anomaly queue (2 isolated exceptions)",
+    category: "Exceptions",
+  },
+  {
+    id: "settlement-agent",
+    prefix: "COPILOT",
+    aliases: ["QA", "AGENT"],
+    label: "AI Settlement Copilot",
+    description: "Audit fees, statutory TDS (§194C/J/I), and runway",
+    category: "Copilot",
+  },
+  {
+    id: "treasury-forecast",
+    prefix: "CASH",
+    aliases: ["TR"],
+    label: "Treasury & Runway",
+    description: "View ₹8.42 Cr reserves and 232-day forward runway",
+    category: "Treasury",
+  },
+  {
+    id: "invoices-ledger",
+    prefix: "INV",
+    aliases: ["AP"],
+    label: "Invoices Ledger",
+    description: "View 55 Accounts Payable vendor invoices",
+    category: "Ledger",
+  },
+  {
+    id: "bank-feeds",
+    prefix: "BANK",
+    label: "Bank Feeds",
+    description: "View ICICI, HDFC, and RazorpayX settlement feeds",
+    category: "Ledger",
+  },
+  {
+    id: "eval-benchmark",
+    prefix: "EVAL",
+    label: "Run Eval Benchmark",
+    description: "Run the 52-record reconciliation precision benchmark",
+    category: "Reconciliation",
+  },
   {
     id: "security-description",
     prefix: "DES",
@@ -238,14 +290,14 @@ export const commands: Command[] = [
     id: "export-config",
     prefix: "",
     label: "Export Config",
-    description: "Save config to ~/gloomberb-config-backup.json",
+    description: "Save config to ~/razor-terminal-config-backup.json",
     category: "Config",
   },
   {
     id: "import-config",
     prefix: "",
     label: "Import Config",
-    description: "Load config from ~/gloomberb-config-backup.json",
+    description: "Load config from ~/razor-terminal-config-backup.json",
     category: "Config",
   },
 

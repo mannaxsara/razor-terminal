@@ -16,7 +16,7 @@ export const exceptionQueuePlugin: GloomPlugin = {
     ctx.registerPane({
       id: "exception-queue",
       name: "Exception Queue",
-      icon: "🚨",
+      icon: "E",
       component: ExceptionQueuePane,
       defaultPosition: "right",
       defaultMode: "floating",
