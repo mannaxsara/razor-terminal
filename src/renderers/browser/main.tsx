@@ -25,7 +25,7 @@ if (!rootElement) throw new Error("Missing root element");
 const appRootElement = rootElement;
 appRootElement.tabIndex = -1;
 const root = createRoot(appRootElement);
-root.render(<div className="gloom-loading">Starting Gloomberb...</div>);
+root.render(<div className="gloom-loading">Starting RazorTerminal...</div>);
 
 async function boot(): Promise<void> {
   installBrowserConfigStore();
@@ -57,5 +57,5 @@ async function boot(): Promise<void> {
 
 void boot().catch((error) => {
   const message = error instanceof Error ? error.message : String(error);
-  root.render(<div className="gloom-fatal"><h1>Gloomberb failed to start</h1><pre>{message}</pre></div>);
+  root.render(<div className="gloom-fatal"><h1>RazorTerminal failed to start</h1><pre>{message}</pre></div>);
 });

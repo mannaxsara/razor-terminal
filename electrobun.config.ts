@@ -38,7 +38,7 @@ const config: ElectrobunConfig = {
       codesign: true,
       createDmg: true,
       notarize: true,
-      icons: "icon.iconset",
+      icons: "src/assets/gloomberb-logo.png",
       defaultRenderer: "native",
     },
     win: {
