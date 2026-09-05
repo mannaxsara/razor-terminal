@@ -47,7 +47,13 @@ export const OverviewDashboard: React.FC<OverviewDashboardProps> = ({
         <div className="overview-hero-header">
           <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", marginBottom: "0.4rem" }}>
             <span className="brand-track-tag">Razorpay Track 04 • Autonomous AI Finance Controller</span>
-            <span className="badge badge-success">52 Records • 96.2% Match Rate • 100% Precision</span>
+            <span className="badge badge-success">
+              {matches.length + exceptions.length} Records •{" "}
+              {matches.length + exceptions.length > 0
+                ? ((matches.length / (matches.length + exceptions.length)) * 100).toFixed(1)
+                : "100"}
+              % Match Rate • 100% Precision
+            </span>
           </div>
           <h2 className="overview-hero-title">Autonomous 3-Way Reconciliation & Treasury Workstation for Razorpay Track 04</h2>
           <p className="overview-hero-desc">
@@ -87,6 +93,42 @@ export const OverviewDashboard: React.FC<OverviewDashboardProps> = ({
               Tracks ₹8.42 Cr liquid reserves with 232-day runway across 4 corporate bank accounts with burn simulation.
             </p>
           </div>
+        </div>
+
+        {/* Quick Ingestion Sandbox Banner */}
+        <div
+          style={{
+            marginTop: "1rem",
+            padding: "0.85rem 1.25rem",
+            backgroundColor: "rgba(51, 149, 255, 0.08)",
+            border: "1px solid rgba(51, 149, 255, 0.25)",
+            borderRadius: "var(--radius-md)",
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            flexWrap: "wrap",
+            gap: "0.75rem",
+          }}
+        >
+          <div style={{ display: "flex", alignItems: "center", gap: "0.75rem" }}>
+            <span style={{ fontSize: "1.5rem" }}>📂</span>
+            <div>
+              <div style={{ fontWeight: 700, fontSize: "0.9rem", color: "#ffffff" }}>
+                Interactive Ingestion Sandbox: Upload Bank Statement CSV or Test High-Volume Batches
+              </div>
+              <div style={{ fontSize: "0.75rem", color: "var(--text-secondary)" }}>
+                Drag & drop your custom bank statement (.csv) or run 70+ transaction chaos batches to watch real-time reconciliation.
+              </div>
+            </div>
+          </div>
+          <button
+            className="btn-primary"
+            onClick={() => onSelectTab("reconciliation")}
+            style={{ fontSize: "0.8rem", padding: "0.45rem 1rem", display: "inline-flex", alignItems: "center", gap: "0.4rem" }}
+          >
+            <span>Open CSV Uploader & Batch Controls</span>
+            <span>→</span>
+          </button>
         </div>
       </section>
 

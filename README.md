@@ -25,7 +25,9 @@ In modern Indian enterprise finance, **corporate bank debits and credits NEVER m
 3. **Cross-Border SaaS FX Conversions**: Foreign SaaS bills (AWS, Slack, GitHub) billed in USD are debited in INR at fluctuating spot exchange rates.
 4. **Split & Bulk Tranches**: Single lump-sum bank debits covering multiple vendor invoices.
 
-**RazorTerminal** closes this entire finance-ops loop autonomously, processing a **52-transaction multi-source batch in < 20 milliseconds** with **96.2% automated match rate** and **100% precision (0 false positives)**.
+**RazorTerminal** closes this entire finance-ops loop autonomously, processing a **52-transaction multi-source batch in < 20 milliseconds** with **96.2% automated match rate** and **100% precision (0 false positives)**:
+- **Double-Entry ERP Journal Generator**: Directly produces audit-compliant, balanced double-entry vouchers (Zoho Books CSV & JSON) with automatic splitting of vendor expense, TDS liabilities (§194C/J/I), Razorpay MDR fees, and input GST receivables.
+- **RazorpayX Payout API Payload Generator**: Idempotent production-grade `POST /v1/payouts` payloads for 1-click execution of refunds, vendor settlements, and debit adjustments.
 
 ---
 

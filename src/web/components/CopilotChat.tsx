@@ -52,14 +52,45 @@ export const CopilotChat: React.FC = () => {
     setIsTyping(true);
 
     setTimeout(() => {
-      // Find matching prompt or fallback intelligent reply
+      // 1. Check for simple greetings
+      const cleanText = text.trim().toLowerCase().replace(/[!.,?]/g, "");
+      const isGreeting = ["hi", "hello", "hey", "good morning", "good afternoon", "good evening", "sup", "greetings"].includes(cleanText);
+      const isAck = ["okay", "ok", "k", "sure", "got it", "noted", "cool", "alright", "fine", "understood", "yes", "yep", "yeah"].includes(cleanText);
+      const isPause = ["wait", "hold on", "pause", "give me a sec", "one sec", "one moment", "wait a minute"].includes(cleanText);
+      const isGratitude = ["thanks", "thank you", "thx", "appreciate it", "great"].includes(cleanText);
+
+      // 2. Find matching prompt or fallback intelligent reply
       const matched = predefinedPrompts.find((p) =>
         p.query.toLowerCase().includes(text.toLowerCase()) || text.toLowerCase().includes(p.title.toLowerCase())
       );
 
-      const replyText =
-        matched?.reply ||
-        `Based on the multi-source batch ingestion, your ledger has 50 auto-reconciled records (96.2% match rate) and 2 isolated exceptions in the Honest Exception Queue. Liquid treasury is ₹8.42 Cr with 232 days runway (>7.5 months). Would you like me to audit statutory TDS or draft a dispute email for you?`;
+      let replyText: string;
+
+      if (isGreeting) {
+        replyText = `Hello! How can I assist you with your books and treasury today?\n\nYou can ask me about:\n• **Statutory TDS deductions** under §194C, §194J, or §194I\n• **Gateway MDR fee splits** (2% Razorpay fee + 18% GST)\n• **Honest exception audits** and 1-click vendor dispute notices\n• **30-day cash runway** and cost shock simulations\n• Or click any of the **Quick Finance Actions** on the left!`;
+      } else if (isPause) {
+        replyText = `Standing by! Take your time. Whenever you're ready, let me know what you'd like to inspect in the ledger or treasury.`;
+      } else if (isAck) {
+        replyText = `Sounds good! Let me know which area of the books you'd like to dive into — TDS tax lines, Razorpay gateway fees, vendor dispute drafts, or forward cash runway.`;
+      } else if (isGratitude) {
+        replyText = `You're very welcome! Always here to keep the books balanced and cash positions clear. Let me know if you need any other ledger audit or export.`;
+      } else if (matched) {
+        replyText = matched.reply;
+      } else if (cleanText.includes("tds") || cleanText.includes("tax") || cleanText.includes("194")) {
+        replyText = predefinedPrompts[1].reply;
+      } else if (cleanText.includes("dispute") || cleanText.includes("exception") || cleanText.includes("anomaly") || cleanText.includes("mismatch") || cleanText.includes("overcharge")) {
+        replyText = predefinedPrompts[2].reply;
+      } else if (cleanText.includes("runway") || cleanText.includes("burn") || cleanText.includes("cash") || cleanText.includes("treasury") || cleanText.includes("shock")) {
+        replyText = predefinedPrompts[3].reply;
+      } else if (cleanText.includes("batch") || cleanText.includes("reconcil") || cleanText.includes("match") || cleanText.includes("record")) {
+        replyText = predefinedPrompts[0].reply;
+      } else if (cleanText.includes("gateway") || cleanText.includes("fee") || cleanText.includes("mdr") || cleanText.includes("settle")) {
+        replyText = `**Payment Gateway MDR & GST Breakdown:**\n\nFor settlements via Razorpay PG:\n• Standard Merchant Discount Rate (MDR): **2.00%** on gross collection volume\n• GST on financial processing fees: **18.00%**\n• Autonomous reconciliation automatically credits customer AR gross, debits the bank net deposit, and books fee + GST input credit lines with zero manual math.`;
+      } else if (cleanText.includes("erp") || cleanText.includes("zoho") || cleanText.includes("tally") || cleanText.includes("export")) {
+        replyText = `**Double-Entry ERP Journal Generation:**\n\nYou can download 100% balanced Indian GAAP journal entries right now from the **Reconciliation** tab via the **"📥 Export ERP (Zoho CSV)"** or **"Export JSON"** buttons! All 50 vouchers balance debits and credits with complete TDS liability and MDR fee splits.`;
+      } else {
+        replyText = `I can help you analyze any part of your books. Would you like to check **Statutory TDS (§194C/J/I)**, review the **2 flagged exceptions**, run a **30-day cash runway simulation**, or **export double-entry ERP journals** for Zoho Books?`;
+      }
 
       const copilotMsg: CopilotMessage = {
         id: "m-" + (Date.now() + 1),

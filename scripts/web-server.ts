@@ -3,6 +3,7 @@
  */
 
 import { getReconciledBatchData, getTreasuryState } from "../src/web/data";
+import { ErpJournalGenerator } from "../src/services/erp-export";
 import { join } from "path";
 import { readFile } from "fs/promises";
 
@@ -62,18 +63,51 @@ const server = Bun.serve({
       });
     }
 
+    if (url.pathname === "/api/erp-export") {
+      const generator = new ErpJournalGenerator();
+      const format = url.searchParams.get("format") || "json";
+
+      if (format === "csv") {
+        const csv = generator.toZohoBooksCsv();
+        return new Response(csv, {
+          headers: {
+            "Content-Type": "text/csv; charset=utf-8",
+            "Content-Disposition": 'attachment; filename="razor_terminal_erp_journals_zoho.csv"',
+            "Access-Control-Allow-Origin": "*",
+          },
+        });
+      }
+
+      return Response.json(generator.generateVouchers(), {
+        headers: {
+          "Content-Type": "application/json; charset=utf-8",
+          "Content-Disposition": 'attachment; filename="razor_terminal_erp_journals.json"',
+          "Access-Control-Allow-Origin": "*",
+        },
+      });
+    }
+
     if (url.pathname === "/api/copilot" && req.method === "POST") {
       const body = (await req.json().catch(() => ({}))) as { query?: string };
-      const query = (body.query || "").toLowerCase();
+      const rawQuery = (body.query || "").trim();
+      const query = rawQuery.toLowerCase().replace(/[!.,?]/g, "");
 
       let reply = `Ledger analysis complete: 50 auto-matched transactions (96.2% match rate), 2 flagged exceptions in human-in-the-loop review queue. Treasury balance is ₹8.42 Cr with 232 days forward runway.`;
 
-      if (query.includes("tds") || query.includes("tax")) {
+      if (["hi", "hello", "hey", "good morning", "good afternoon", "good evening", "sup", "greetings"].includes(query)) {
+        reply = `Hello! I'm your RazorTerminal AI Finance Controller. How can I assist you today? You can ask me about statutory TDS (§194C/J/I), Razorpay MDR fee deductions, the 2 flagged exception items, or our 232-day cash runway.`;
+      } else if (["wait", "hold on", "pause", "one sec", "one moment"].includes(query)) {
+        reply = `Standing by! Take your time. Whenever you're ready, let me know what you'd like to inspect in the ledger or treasury.`;
+      } else if (["okay", "ok", "k", "sure", "got it", "noted", "cool", "alright", "fine", "understood", "yes", "yep", "yeah"].includes(query)) {
+        reply = `Sounds good! Let me know which area of the books you'd like to dive into — TDS tax lines, Razorpay gateway fees, vendor dispute drafts, or forward cash runway.`;
+      } else if (["thanks", "thank you", "thx", "appreciate it"].includes(query)) {
+        reply = `You're very welcome! Always here to keep the books balanced and cash positions clear.`;
+      } else if (query.includes("tds") || query.includes("tax")) {
         reply = `Statutory TDS breakdown: §194J (10% tech/legal: ₹66,000 withheld), §194C (2% contractor/logistics: ₹3,780 withheld), §194I (10% rent: ₹40,000 withheld). Precision is 100%.`;
-      } else if (query.includes("dispute") || query.includes("exception") || query.includes("overcharge")) {
+      } else if (query.includes("dispute") || query.includes("exception") || query.includes("overcharge") || query.includes("variance")) {
         reply = `Vendor dispute drafted for Overpriced Cloud Consultants (INV-2026-036). Debited ₹2,84,000 vs Approved Invoiced ₹3,24,000 (Variance: ₹40,000). Ready to send to ap-billing@overpricedcloud.com.`;
-      } else if (query.includes("shock") || query.includes("burn") || query.includes("runway")) {
-        reply = `Under a +20% cost shock, daily burn increases from ₹3.62L to ₹4.34L/day, shortening runway from 232 days to 193.8 days (-38.2 days).`;
+      } else if (query.includes("shock") || query.includes("burn") || query.includes("runway") || query.includes("cash")) {
+        reply = `Under a +20% cost shock, daily burn increases from ₹3.62L to ₹4.34L/day, shortening runway from 232 days to 193.8 days (-38.2 days). Total liquid cash is ₹8.42 Cr.`;
       }
 
       return Response.json({ reply }, { headers: { "Access-Control-Allow-Origin": "*" } });

@@ -46,6 +46,7 @@ export interface WebExceptionItem {
     subject: string;
     body: string;
   };
+  razorpayxPayoutPayload?: Record<string, any>;
 }
 
 export interface TreasuryAccount {
