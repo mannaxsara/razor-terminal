@@ -384,10 +384,30 @@ export const ReconciliationTable: React.FC<ReconciliationTableProps> = ({
                     {formatINR(m.debitAmount)}
                   </td>
                   <td className="font-mono" style={{ color: "var(--text-secondary)" }}>
-                    {formatINR(m.invoiceAmount)}
+                    <div>{formatINR(m.invoiceAmount)}</div>
+                    {m.tdsDeducted && m.tdsDeducted > 0 && (
+                      <div style={{ fontSize: "0.7rem", color: "#f59e0b", marginTop: "2px" }}>
+                        - {formatINR(m.tdsDeducted)} TDS
+                      </div>
+                    )}
                   </td>
                   <td>
                     {getCategoryBadge(m.category, m.tdsSection)}
+                    {m.tdsDeducted && m.tdsDeducted > 0 && (
+                      <div style={{ fontSize: "0.7rem", color: "#fbbf24", marginTop: "2px" }}>
+                        Net: {formatINR(m.invoiceAmount - m.tdsDeducted)}
+                      </div>
+                    )}
+                    {m.fxRateApplied && (
+                      <div style={{ fontSize: "0.7rem", color: "#38bdf8", marginTop: "2px" }}>
+                        @ ₹{m.fxRateApplied.toFixed(2)}/USD
+                      </div>
+                    )}
+                    {m.gatewayFeeDeducted && m.gatewayFeeDeducted > 0 && (
+                      <div style={{ fontSize: "0.7rem", color: "#93c5fd", marginTop: "2px" }}>
+                        - {formatINR(m.gatewayFeeDeducted)} Fee+GST
+                      </div>
+                    )}
                   </td>
                   <td>
                     <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>

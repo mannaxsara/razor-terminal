@@ -17,6 +17,7 @@ export interface WebReconciledMatch {
   invoiceIds: string[];
   vendorName: string;
   invoiceAmount: number;
+  invoiceGrossAmount?: number;
   category: MatchCategory;
   confidence: number;
   status: "MATCHED" | "EXCEPTION";

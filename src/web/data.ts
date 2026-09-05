@@ -1,4 +1,4 @@
-﻿/**
+/**
  * RazorTerminal Web Dashboard — Shared Data & Dynamic Ingestion Adapter
  */
 
@@ -55,10 +55,10 @@ export function getReconciledBatchData(
     const inv = m.invoiceIds[0] ? invoiceMap.get(m.invoiceIds[0]) : undefined;
     const rawTxn = bankTxnMap.get(m.transactionId);
     const vendor = inv ? inv.vendorName : rawTxn?.narration.replace(/^(NEFT|RTGS|UPI|POS-DEBIT|CR)-/, "").split("-")[0] ?? "Autonomous Settlement";
-    const invAmount =
+    const invGrossAmount =
       m.invoiceIds.length > 1
-        ? m.invoiceIds.reduce((sum, id) => sum + (invoiceMap.get(id)?.netPayable ?? 0), 0)
-        : (inv ? inv.netPayable : m.matchedAmount);
+        ? m.invoiceIds.reduce((sum, id) => sum + (invoiceMap.get(id)?.totalAmount ?? invoiceMap.get(id)?.netPayable ?? 0), 0)
+        : (inv ? inv.totalAmount : m.matchedAmount);
 
     return {
       id: m.matchId || m.transactionId,
@@ -70,7 +70,8 @@ export function getReconciledBatchData(
       narration: rawTxn?.narration || m.explanation,
       invoiceIds: m.invoiceIds,
       vendorName: vendor,
-      invoiceAmount: invAmount,
+      invoiceAmount: invGrossAmount,
+      invoiceGrossAmount: invGrossAmount,
       category: m.category,
       confidence: Math.round(m.confidence * 100),
       status: "MATCHED",
